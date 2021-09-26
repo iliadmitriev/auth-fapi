@@ -19,8 +19,45 @@ source venv/bin/activate
 pip install fastapi uvicorn\[standard\]
 ```
 
-# Start Application
+# Tests
 
+Tests located in `tests` directory and based on pytest and using `requests` library
+
+## Install pytest
+
+```shell
+pip install pytest requests
+```
+
+## run tests
+```shell
+pytest -v
+```
+
+## install coverage
+```shell
+pip install pytest-coverage
+```
+
+## run tests with coverage
+```shell
+pytest -v --cov=.
+```
+## run tests with coverage and check 100%
+```shell
+pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100
+```
+
+## Coverage HTML report
+```shell
+# run tests and generate report
+pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100 --cov-report=html
+
+# open report
+open htmlcov/index.html 
+```
+
+# Start Application
 
 ## Start with hot reload
 
@@ -39,3 +76,10 @@ docker build -t auth-fapi ./
 ```shell
 docker run -d -p 8000:8000 --name auth-fapi --hostname auth-fapi auth-fapi:latest 
 ```
+
+# Usage
+
+## API documentation
+
+1. Swagger Documentation http://127.0.0.1:8000/docs
+2. ReDoc http://127.0.0.1:8000/redoc
