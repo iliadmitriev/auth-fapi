@@ -19,3 +19,23 @@ source venv/bin/activate
 pip install fastapi uvicorn\[standard\]
 ```
 
+# Start Application
+
+
+## Start with hot reload
+
+```shell
+uvicorn main:app --reload 
+```
+
+# Docker
+
+## Build image
+```shell
+docker build -t auth-fapi ./
+```
+
+## Run docker container
+```shell
+docker run -d -p 8000:8000 --name auth-fapi --hostname auth-fapi auth-fapi:latest 
+```
