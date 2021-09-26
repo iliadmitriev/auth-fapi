@@ -19,3 +19,11 @@ source venv/bin/activate
 pip install fastapi uvicorn\[standard\]
 ```
 
+# Start Application
+
+
+## Start with hot reload
+
+```shell
+uvicorn main:app --reload 
+```
