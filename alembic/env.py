@@ -1,9 +1,11 @@
 from logging.config import fileConfig
 
+from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
-from alembic import context
+from config import *
+from models import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -13,11 +15,17 @@ config = context.config
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
 
+# set config from config.db module
+DATABASE_URL = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}' \
+               f'@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
+config.set_main_option('sqlalchemy.url', DATABASE_URL)
+
+
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

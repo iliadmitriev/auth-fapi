@@ -1,0 +1,8 @@
+from os import environ as env
+
+
+POSTGRES_DB = env.get('POSTGRES_DB')
+POSTGRES_USER = env.get('POSTGRES_USER')
+POSTGRES_PASSWORD = env.get('POSTGRES_PASSWORD')
+POSTGRES_HOST = env.get('POSTGRES_HOST')
+POSTGRES_PORT = env.get('POSTGRES_PORT', '5432')
