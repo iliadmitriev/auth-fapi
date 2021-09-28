@@ -1,5 +1,6 @@
 alembic==1.7.3
 asgiref==3.4.1
+asyncpg==0.24.0
 attrs==21.2.0
 certifi==2021.5.30
 charset-normalizer==2.0.6
@@ -15,6 +16,7 @@ Mako==1.1.5
 MarkupSafe==2.0.1
 packaging==21.0
 pluggy==1.0.0
+psycopg2==2.9.1
 py==1.10.0
 pydantic==1.8.2
 pyparsing==2.4.7
