@@ -12,5 +12,5 @@ def test_items_get():
 
 def test_items_post(item):
     response = client.post("/items/", data=item.json())
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json() == item.dict()
