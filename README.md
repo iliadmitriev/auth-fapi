@@ -19,6 +19,29 @@ source venv/bin/activate
 pip install fastapi uvicorn\[standard\]
 ```
 
+4. Create database
+* create `.env` file for docker
+```shell
+cat > .env << _EOF_
+POSTGRES_HOST=192.168.10.1
+POSTGRES_PORT=5432
+POSTGRES_DB=auth
+POSTGRES_USER=auth
+POSTGRES_PASSWORD=authsecret
+_EOF_
+
+export $(cat .env | xargs)
+```
+* create postgres container with docker
+```shell
+docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
+    -p 5432:5432 --env-file .env postgres:13.4-alpine3.14
+```
+* run migrations
+```shell
+alembic upgrade head
+```
+
 # Tests
 
 Tests located in `tests` directory and based on pytest and using `requests` library
