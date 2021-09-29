@@ -1,5 +1,5 @@
-from sqlalchemy.ext.declarative import declarative_base
+from models.users import User
+from db import Base
 
-Base = declarative_base()
 
-__all__ = ["users", "Base"]
+__all__ = ['Base']
