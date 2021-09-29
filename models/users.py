@@ -1,10 +1,8 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, func
-from models import Base
+from db import Base
 
 
 class User(Base):
-    __tablename__ = 'user' # noqa
-
     id = Column('id', Integer, primary_key=True, autoincrement=True)
     email = Column('email', String(100), nullable=False, index=True, unique=True)
     password = Column('password', String(200))
