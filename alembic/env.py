@@ -6,7 +6,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from config import *
+from config import DATABASE_URL
 from models import Base
 
 # this is the Alembic Config object, which provides
@@ -18,8 +18,6 @@ config = context.config
 fileConfig(config.config_file_name)
 
 # set config from config.db module
-DATABASE_URL = f'postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}' \
-               f'@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
 config.set_main_option('sqlalchemy.url', DATABASE_URL)
 
 
