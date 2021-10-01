@@ -4,3 +4,4 @@ branch = True
 omit =
 	venv/*
 	tests/*
+	alembic/versions/*
