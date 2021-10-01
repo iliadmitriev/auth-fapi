@@ -2,4 +2,4 @@ from models.users import User
 from db import Base
 
 
-__all__ = ['Base']
+__all__ = ['Base', 'User']
