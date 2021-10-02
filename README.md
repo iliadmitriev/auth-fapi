@@ -20,24 +20,63 @@ pip install fastapi uvicorn\[standard\]
 ```
 
 4. Create database
-* create `.env` file for docker
+* for postgresql as database
 ```shell
-cat > .env << _EOF_
-POSTGRES_HOST=192.168.10.1
-POSTGRES_PORT=5432
+# setup db, user and password
+cat > .env_postgres << _EOF_
 POSTGRES_DB=auth
 POSTGRES_USER=auth
 POSTGRES_PASSWORD=authsecret
 _EOF_
 
+# create docker instance of postgresql
+docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
+    -p 5432:5432 --env-file .env_postgres postgres:13.4-alpine3.14
+```
+* for mysql as database
+```shell
+# setup db, user and password
+cat > .env_mysql << _EOF
+MYSQL_ROOT_PASSWORD=rootsecret
+MYSQL_DATABASE=auth
+MYSQL_USER=auth
+MYSQL_PASSWORD=authsecret
+_EOF
+
+# create docker instance of mariadb
+docker run -d --name auth-fapi-mariadb --hostname auth-fapi-mariadb \
+              --env-file .env_mysql -p 3306:3306 mariadb
+```
+
+4. configure application environment variables
+* for postgresql
+```shell
+cat > .env << _EOF_
+DATABASE_DRIVER=postgresql+asyncpg
+DATABASE_HOST=192.168.10.1
+DATABASE_PORT=5432
+DATABASE_NAME=auth
+DATABASE_USER=auth
+DATABASE_PASSWORD=authsecret
+_EOF_
+
 export $(cat .env | xargs)
 ```
-* create postgres container with docker
+* for mysql
 ```shell
-docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
-    -p 5432:5432 --env-file .env postgres:13.4-alpine3.14
+cat > .env << _EOF_
+DATABASE_DRIVER=mysql+asyncmy
+DATABASE_HOST=192.168.10.1
+DATABASE_PORT=3306
+DATABASE_NAME=auth
+DATABASE_USER=auth
+DATABASE_PASSWORD=authsecret
+_EOF_
+
+export $(cat .env | xargs)
 ```
-* run migrations
+
+6. Run migrations
 ```shell
 alembic upgrade head
 ```
