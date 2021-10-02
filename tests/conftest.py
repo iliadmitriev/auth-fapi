@@ -39,33 +39,29 @@ def do_run_migrations(connection, alembic_env):
 
 
 async def async_migrate(engine, alembic_env):
-    # migrate
     async with engine.begin() as conn:
         await conn.run_sync(do_run_migrations, alembic_env)
 
 
-def migrate(engine, url):
+async def migrate(engine, url):
     alembic_cfg = Config()
     alembic_cfg.set_main_option("script_location", "alembic")
     alembic_cfg.set_main_option("url", url)
-
     alembic_script = ScriptDirectory.from_config(alembic_cfg)
     alembic_env = EnvironmentContext(alembic_cfg, alembic_script)
 
-    asyncio.run(async_migrate(engine, alembic_env))
-
-    return engine.connect()
+    await async_migrate(engine, alembic_env)
 
 
-def drop_database(db_conn):
-    pass
+async def disconnect(engine):
+    await engine.dispose()
 
 
 @pytest.fixture
-def db_connection():
+async def engine():
     url = TEST_DATABASE_URL
     engine = create_async_engine(url, echo=False)
-    connection = migrate(engine, url)
-    yield connection, engine
-    drop_database(connection)
+    await migrate(engine, url)
+    yield engine
+    await disconnect(engine)
     
