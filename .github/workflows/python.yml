@@ -39,8 +39,12 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Pytest with Coverage
       run: |
-        pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100
+        pytest -v --cov=. --cov-report=term-missing --cov-branch
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Check if coverage under 100
+      run: |
+        coverage report --fail-under=100
+
