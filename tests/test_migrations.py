@@ -7,11 +7,9 @@ from models import User
 
 
 @pytest.mark.asyncio
-async def test_migrations_run(db_connection):
-    connection, engine = db_connection
+async def test_migrations_run(engine):
     async_session = sessionmaker(engine, expire_on_commit=False, autoflush=False, class_=AsyncSession)
 
-    conn = await connection
     user_db = User(email="user@example.com", password="password", is_active=True)
     async with async_session(bind=engine) as session:
         # add user
@@ -20,11 +18,10 @@ async def test_migrations_run(db_connection):
         await session.refresh(user_db)
         assert user_db.id == 1
 
+    async with engine.connect() as conn:
         query = select(User).where(User.email == "user@example.com")
         res = await conn.execute(query)
-
         user = res.fetchone()
-
         assert user.id == 1
 
 
