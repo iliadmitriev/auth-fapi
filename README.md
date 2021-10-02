@@ -1,5 +1,9 @@
 # Auth microservice
 
+[![CI unittests](https://github.com/iliadmitriev/auth-fapi/actions/workflows/python.yml/badge.svg)](https://github.com/iliadmitriev/auth-fapi/actions/workflows/python.yml)
+[![codecov](https://codecov.io/gh/iliadmitriev/auth-fapi/branch/master/graph/badge.svg?token=TNU4TRP8S3)](https://codecov.io/gh/iliadmitriev/auth-fapi)
+[![CodeQL](https://github.com/iliadmitriev/auth-fapi/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/iliadmitriev/auth-fapi/actions/workflows/codeql-analysis.yml)
+
 This program is for educational purposes. It's created using FastAPI and pydantic.
 
 # Install
@@ -16,7 +20,7 @@ source venv/bin/activate
 
 3. Install pip packages
 ```shell
-pip install fastapi uvicorn\[standard\]
+pip install -r requirements.txt
 ```
 
 4. Create database
