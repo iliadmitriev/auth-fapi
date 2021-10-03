@@ -139,8 +139,41 @@ docker build -t auth-fapi ./
 ```
 
 ## Run docker container
+* setup db environment and run db container
 ```shell
-docker run -d -p 8000:8000 --name auth-fapi --hostname auth-fapi auth-fapi:latest 
+# setup db, user and password
+cat > .env_postgres << _EOF_
+POSTGRES_DB=auth
+POSTGRES_USER=auth
+POSTGRES_PASSWORD=authsecret
+_EOF_
+
+# create docker instance of postgresql
+docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
+    -p 5432:5432 --env-file .env_postgres postgres:13.4-alpine3.14
+```
+
+* setup environment for application container 
+```shell
+# setup db, user and password
+cat > .env << _EOF_
+DATABASE_DRIVER=postgresql+asyncpg
+DATABASE_HOST=192.168.10.1
+DATABASE_PORT=5432
+DATABASE_NAME=auth
+DATABASE_USER=auth
+DATABASE_PASSWORD=authsecret
+_EOF_
+```
+* migrate
+```shell
+docker run -it --rm --env-file .env auth-fapi:latest \
+       alembic upgrade head
+```
+* run application container
+```shell
+docker run -d -p 8000:8000 --name auth-fapi --hostname auth-fapi \
+             --env-file .env auth-fapi:latest
 ```
 
 # Usage
