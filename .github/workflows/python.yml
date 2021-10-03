@@ -39,7 +39,12 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Pytest with Coverage
       run: |
-        pytest -v --cov=. --cov-report=term-missing --cov-branch
+        pytest -v --cov=. --cov-report=term-missing --cov-report=html --cov-branch
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage-report
+        path: htmlcov
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
       with:
