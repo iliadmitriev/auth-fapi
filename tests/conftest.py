@@ -1,17 +1,15 @@
-import asyncio
 import pathlib
 import sys
 
+import pytest
 from alembic.config import Config
 from alembic.operations import Operations
 from alembic.runtime.environment import EnvironmentContext
 from alembic.script import ScriptDirectory
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from models import Base
-
-import pytest
 from main import Item
+from models import Base
 
 BASE_PATH = pathlib.Path(__file__).parent.parent
 sys.path.append(BASE_PATH)
@@ -30,7 +28,10 @@ def do_upgrade(revision, context):
 
 
 def do_run_migrations(connection, alembic_env):
-    alembic_env.configure(connection=connection, target_metadata=Base.metadata, fn=do_upgrade)
+    alembic_env.configure(
+        connection=connection, target_metadata=Base.metadata,
+        fn=do_upgrade, render_as_batch=True
+    )
     migration_context = alembic_env.get_context()
 
     with migration_context.begin_transaction():
