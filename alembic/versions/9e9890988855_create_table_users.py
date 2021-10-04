@@ -9,7 +9,6 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects.sqlite import aiosqlite
 
-
 # revision identifiers, used by Alembic.
 revision = '9e9890988855'
 down_revision = None
@@ -24,16 +23,16 @@ def upgrade():
     else:
         now_context = sa.text('now()')
     op.create_table('user',
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.Column('email', sa.String(length=100), nullable=False),
-    sa.Column('password', sa.String(length=200), nullable=True),
-    sa.Column('is_active', sa.Boolean(), nullable=True),
-    sa.Column('is_superuser', sa.Boolean(), nullable=True),
-    sa.Column('created', sa.DateTime(timezone=True), server_default=now_context, nullable=True),
-    sa.Column('last_login', sa.DateTime(timezone=True), nullable=True),
-    sa.Column('confirmed', sa.Boolean(), nullable=True),
-    sa.PrimaryKeyConstraint('id')
-    )
+                    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+                    sa.Column('email', sa.String(length=100), nullable=False),
+                    sa.Column('password', sa.String(length=200), nullable=True),
+                    sa.Column('is_active', sa.Boolean(), nullable=True),
+                    sa.Column('is_superuser', sa.Boolean(), nullable=True),
+                    sa.Column('created', sa.DateTime(timezone=True), server_default=now_context, nullable=True),
+                    sa.Column('last_login', sa.DateTime(timezone=True), nullable=True),
+                    sa.Column('confirmed', sa.Boolean(), nullable=True),
+                    sa.PrimaryKeyConstraint('id')
+                    )
     op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
     # ### end Alembic commands ###
 
