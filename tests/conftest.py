@@ -14,7 +14,7 @@ from models import Base
 BASE_PATH = pathlib.Path(__file__).parent.parent
 sys.path.append(BASE_PATH)  # type: ignore
 
-TEST_DATABASE_URL = "sqlite+aiosqlite://?cache=shared"
+TEST_DATABASE_URL = "sqlite+aiosqlite://?cache=shared"  # noqa
 
 
 @pytest.fixture
@@ -24,7 +24,7 @@ def item():
 
 def do_upgrade(revision, context):
     alembic_script = context.script
-    return alembic_script._upgrade_revs(alembic_script.get_heads(), revision)
+    return alembic_script._upgrade_revs(alembic_script.get_heads(), revision)  # noqa
 
 
 def do_run_migrations(connection, alembic_env):
