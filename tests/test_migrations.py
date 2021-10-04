@@ -10,7 +10,7 @@ from models import User
 async def test_migrations_run(engine):
     async_session = sessionmaker(engine, expire_on_commit=False, autoflush=False, class_=AsyncSession)
 
-    user_db = User(email="user@example.com", password="password", is_active=True)
+    user_db = User(email="user@example.com", password="password", is_active=True)  # type: ignore
     async with async_session(bind=engine) as session:
         # add user
         session.add(user_db)
