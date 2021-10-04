@@ -10,7 +10,7 @@ def test_user_base():
     assert user.is_active
     assert not user.is_superuser
     assert not user.confirmed
-    assert user.dict(skip_defaults=True) == {'email': 'test@example.com'}
+    assert user.dict(exclude_unset=True) == {'email': 'test@example.com'}
     assert user.dict() == {
         'email': 'test@example.com', 'is_active': True,
         'is_superuser': False, 'confirmed': False
@@ -20,7 +20,7 @@ def test_user_base():
 def test_user_base_email_empty():
     user = UserBase()
     assert user.email is None
-    assert user.dict(skip_defaults=True) == {}
+    assert user.dict(exclude_unset=True) == {}
     assert user.dict() == {
         'email': None, 'is_active': True,
         'is_superuser': False, 'confirmed': False
