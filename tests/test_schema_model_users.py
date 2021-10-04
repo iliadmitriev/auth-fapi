@@ -8,7 +8,7 @@ def test_user_schema_dump_to_db_without_defaults():
         password="secret",
         is_superuser=False
     )
-    user_db = User(**user.dict(skip_defaults=True))  # type: ignore
+    user_db = User(**user.dict(exclude_unset=True))  # type: ignore
 
     assert user_db.email == "fake@example.com"
     assert user_db.password == "secret"
