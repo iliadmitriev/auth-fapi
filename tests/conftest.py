@@ -12,7 +12,7 @@ from main import Item
 from models import Base
 
 BASE_PATH = pathlib.Path(__file__).parent.parent
-sys.path.append(BASE_PATH)
+sys.path.append(BASE_PATH)  # type: ignore
 
 TEST_DATABASE_URL = "sqlite+aiosqlite://?cache=shared"
 

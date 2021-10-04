@@ -33,7 +33,7 @@ async def create_item(item: Item) -> Item:
     response_model=List[Item],
     tags=['items']
 )
-async def create_item(q: Optional[str] = None) -> List[Item]:
+async def create_item() -> List[Item]:
     item = Item(name="Orange Juice", price=9.90)
     return [item]
 
@@ -44,4 +44,4 @@ async def root():
 
 
 if __name__ == "__main__":  # pragma: no cover
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)  # type: ignore
