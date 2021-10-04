@@ -9,6 +9,7 @@ class Base:
     __name__: str
 
     # Generate table name automatically
+    # noinspection SpellCheckingInspection
     @declared_attr
-    def __tablename__(cls) -> str: # noqa
+    def __tablename__(cls) -> str:  # noqa
         return cls.__name__.lower()
