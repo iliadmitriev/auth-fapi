@@ -12,8 +12,8 @@ router = APIRouter()
 
 @router.post(
     '/users/',
+    name="users:post",
     status_code=status.HTTP_201_CREATED,
-    name="Create a new user",
     description="Creates a new user with post query",
     response_model=UserDB
 )
@@ -31,6 +31,7 @@ async def user_post(user: UserCreate, db: AsyncSession = Depends(get_db)):
 
 @router.get(
     '/users/{user_id}',
+    name="users:get-by-id",
     response_model=UserDB
 )
 async def user_get(user_id: int, db: AsyncSession = Depends(get_db)):
