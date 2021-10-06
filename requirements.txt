@@ -1,5 +1,5 @@
 aiosqlite==0.17.0
-alembic==1.7.3
+alembic==1.7.4
 asgiref==3.4.1
 asyncmy==0.2.0
 asyncpg==0.24.0
