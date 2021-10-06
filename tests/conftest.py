@@ -21,6 +21,9 @@ sys.path.append(BASE_PATH)  # type: ignore
 
 @pytest.fixture
 def item():
+    """
+    create test item object
+    """
     return Item(name='Banana', price=2.99, tax=0.25, description='One pound of banana')
 
 
@@ -62,11 +65,17 @@ async def disconnect(engine):
 
 @pytest.fixture(scope='session')
 def database_test_url():
+    """
+    generate in memory sqlite db connect url for test purposes
+    """
     return "sqlite+aiosqlite://?cache=shared"  # noqa
 
 
 @pytest.fixture(scope='session')
 async def engine(database_test_url):
+    """
+    create async sqlalchemy engine and run alembic migrations
+    """
     url = database_test_url
     engine = create_async_engine(url, echo=False)
     await migrate(engine, url)
@@ -76,6 +85,9 @@ async def engine(database_test_url):
 
 @pytest.fixture(scope='session')
 def get_app(engine, database_test_url):
+    """
+    create FastApi test application with initialized database
+    """
     from config import db
     db.DATABASE_URL = database_test_url
     with mock.patch('sqlalchemy.ext.asyncio.create_async_engine') as create_eng:
@@ -84,14 +96,20 @@ def get_app(engine, database_test_url):
         return app
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture()
 async def get_client(get_app):
+    """
+    create a custom async http client based on httpx AsyncClient
+    """
     async with AsyncClient(app=get_app, base_url="http://testserver") as client:
         yield client
 
 
 @pytest.fixture(scope='session')
 async def add_some_user(engine):
+    """
+    add test user to database and return it
+    """
     async_session = sessionmaker(engine, expire_on_commit=False, autoflush=False, class_=AsyncSession)
 
     user_db = User(email="myuserwithid@example.com", password="password", is_active=True)
@@ -106,6 +124,9 @@ async def add_some_user(engine):
 
 @pytest.fixture(scope='session')
 def event_loop():
+    """
+    Create or get already created running default event loop for whole session
+    """
     try:
         loop = asyncio.get_running_loop()
     except RuntimeError:

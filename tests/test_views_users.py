@@ -3,6 +3,7 @@ import uuid
 import pytest
 from schemas import UserCreate
 
+
 @pytest.mark.asyncio
 async def test_get_user_by_id(get_client, add_some_user):
 
