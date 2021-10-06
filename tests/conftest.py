@@ -1,20 +1,22 @@
+import asyncio
 import pathlib
 import sys
+from unittest import mock
 
 import pytest
 from alembic.config import Config
 from alembic.operations import Operations
 from alembic.runtime.environment import EnvironmentContext
 from alembic.script import ScriptDirectory
-from sqlalchemy.ext.asyncio import create_async_engine
+from httpx import AsyncClient
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
 
+from models import Base, User
 from schemas.items import Item
-from models import Base
 
 BASE_PATH = pathlib.Path(__file__).parent.parent
 sys.path.append(BASE_PATH)  # type: ignore
-
-TEST_DATABASE_URL = "sqlite+aiosqlite://?cache=shared"  # noqa
 
 
 @pytest.fixture
@@ -58,11 +60,56 @@ async def disconnect(engine):
     await engine.dispose()
 
 
-@pytest.fixture
-async def engine():
-    url = TEST_DATABASE_URL
+@pytest.fixture(scope='session')
+def database_test_url():
+    return "sqlite+aiosqlite://?cache=shared"  # noqa
+
+
+@pytest.fixture(scope='session')
+async def engine(database_test_url):
+    url = database_test_url
     engine = create_async_engine(url, echo=False)
     await migrate(engine, url)
     yield engine
-    await disconnect(engine)
-    
+    await engine.dispose()
+
+
+@pytest.fixture(scope='session')
+def get_app(engine, database_test_url):
+    from config import db
+    db.DATABASE_URL = database_test_url
+    with mock.patch('sqlalchemy.ext.asyncio.create_async_engine') as create_eng:
+        create_eng.return_value = engine
+        from main import app
+        return app
+
+
+@pytest.fixture(scope='session')
+async def get_client(get_app):
+    async with AsyncClient(app=get_app, base_url="http://testserver") as client:
+        yield client
+
+
+@pytest.fixture(scope='session')
+async def add_some_user(engine):
+    async_session = sessionmaker(engine, expire_on_commit=False, autoflush=False, class_=AsyncSession)
+
+    user_db = User(email="myuserwithid@example.com", password="password", is_active=True)
+    async with async_session(bind=engine) as session:
+        # add user
+        session.add(user_db)
+        await session.commit()
+        await session.refresh(user_db)
+
+    return user_db
+
+
+@pytest.fixture(scope='session')
+def event_loop():
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+
+    yield loop
+    loop.close()
