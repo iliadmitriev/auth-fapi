@@ -8,7 +8,7 @@ from alembic.runtime.environment import EnvironmentContext
 from alembic.script import ScriptDirectory
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from main import Item
+from schemas.items import Item
 from models import Base
 
 BASE_PATH = pathlib.Path(__file__).parent.parent
