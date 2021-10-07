@@ -11,6 +11,7 @@ from alembic.script import ScriptDirectory
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
+from asgi_lifespan import LifespanManager
 
 from models import Base, User
 from schemas.items import Item
@@ -84,7 +85,7 @@ async def engine(database_test_url):
 
 
 @pytest.fixture(scope='session')
-def get_app(engine, database_test_url):
+async def get_app(engine, database_test_url):
     """
     create FastApi test application with initialized database
     """
@@ -93,7 +94,8 @@ def get_app(engine, database_test_url):
     with mock.patch('sqlalchemy.ext.asyncio.create_async_engine') as create_eng:
         create_eng.return_value = engine
         from main import app
-        return app
+        async with LifespanManager(app):
+            yield app
 
 
 @pytest.fixture()

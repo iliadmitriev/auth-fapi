@@ -1,6 +1,7 @@
 aiosqlite==0.17.0
 alembic==1.7.3
 anyio==3.3.2
+asgi-lifespan==1.0.1
 asgiref==3.4.1
 asyncmy==0.2.0
 asyncpg==0.24.0
