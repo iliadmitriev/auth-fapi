@@ -13,10 +13,7 @@ router = APIRouter()
 )
 async def health_check(request: Request):
     db = request.app.state.db
-    try:
-        res = await db.execute("select 1")
-        one = res.scalar()
-        assert str(one) == '1'
-    except InterfaceError:
-        return HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Fail")
+    res = await db.execute("select 1")
+    one = res.scalar()
+    assert str(one) == '1'
     return {"message": "OK"}

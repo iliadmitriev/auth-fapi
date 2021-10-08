@@ -26,8 +26,16 @@ async def test_get_user_by_id_not_exists(get_client, add_some_user):
 
 
 @pytest.mark.asyncio
-async def test_post_user_create(get_client, get_app):
+async def test_post_user_create_201_created(get_client, get_app):
     random_email = f'{uuid.uuid4().hex}@example.com'
     user = UserCreate(email=random_email, password='password')
     res = await get_client.post(get_app.url_path_for('users:post'), content=user.json())
     assert res.status_code == status.HTTP_201_CREATED
+
+
+@pytest.mark.asyncio
+async def test_post_user_create_400_bad_request(get_client, get_app, add_some_user):
+    random_email = f'myuserwithid@example.com'
+    user = UserCreate(email=random_email, password='password')
+    res = await get_client.post(get_app.url_path_for('users:post'), content=user.json())
+    assert res.status_code == status.HTTP_400_BAD_REQUEST
