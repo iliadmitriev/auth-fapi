@@ -1,5 +1,5 @@
+import importlib
 import os
-
 from unittest import mock
 
 
@@ -12,13 +12,14 @@ def test_import_config():
         'DATABASE_PORT': '5432',
         'DATABASE_DRIVER': 'postgresql+asyncpg'
     }):
-        import config
-        assert config.DATABASE_NAME == 'database'
-        assert config.DATABASE_USER == 'user'
-        assert config.DATABASE_PASSWORD == 'pass'
-        assert config.DATABASE_HOST == 'host'
-        assert config.DATABASE_PORT == '5432'
-        assert config.DATABASE_DRIVER == 'postgresql+asyncpg'
+        from config import db
+        importlib.reload(db)
+        assert db.DATABASE_NAME == 'database'
+        assert db.DATABASE_USER == 'user'
+        assert db.DATABASE_PASSWORD == 'pass'
+        assert db.DATABASE_HOST == 'host'
+        assert db.DATABASE_PORT == '5432'
+        assert db.DATABASE_DRIVER == 'postgresql+asyncpg'
 
 
 def test_db_url():
@@ -30,5 +31,6 @@ def test_db_url():
         'DATABASE_PORT': '5432',
         'DATABASE_DRIVER': 'postgresql+asyncpg'
     }):
-        import config
-        assert config.DATABASE_URL == 'postgresql+asyncpg://user:pass@host:5432/database'
+        from config import db
+        importlib.reload(db)
+        assert db.DATABASE_URL == 'postgresql+asyncpg://user:pass@host:5432/database'

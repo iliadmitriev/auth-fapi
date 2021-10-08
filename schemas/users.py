@@ -23,6 +23,13 @@ class UserUpdate(UserBase):
     password: Optional[str] = None
 
 
+# output user
+class UserOut(UserBase):
+    id: Optional[int] = None
+    created: Optional[datetime] = None
+    last_login: Optional[datetime] = None
+
+
 # user attributes stored in db
 class UserDB(UserBase):
     id: Optional[int] = None
