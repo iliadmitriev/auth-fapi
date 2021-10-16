@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException
-from sqlalchemy import update
 from sqlalchemy.future import select
 from starlette import status
 from starlette.requests import Request
