@@ -91,3 +91,23 @@ async def user_patch(user_id: int, user: UserUpdate, request: Request):
     await db.commit()
     await db.refresh(found_user)
     return found_user
+
+
+@router.delete(
+    '/users/{user_id}',
+    name="users:delete",
+    summary="delete user by id",
+    response_model=UserDB
+)
+async def user_patch(user_id: int, request: Request):
+    db = request.app.state.db
+    res = await db.execute(select(User).filter(User.id == user_id))
+    found_user = res.scalar_one_or_none()
+    if not found_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id '{user_id}' not found"
+        )
+    await db.delete(found_user)
+    await db.commit()
+    return found_user
