@@ -35,7 +35,7 @@ _EOF_
 
 # create docker instance of postgresql
 docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
-    -p 5432:5432 --env-file .env_postgres postgres:13.4-alpine3.14
+    -p 5432:5432 --env-file .env_postgres postgres:14-alpine
 ```
 * for mysql as database
 ```shell
