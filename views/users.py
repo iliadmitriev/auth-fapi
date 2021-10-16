@@ -5,7 +5,7 @@ from starlette import status
 from starlette.requests import Request
 
 from models.users import User
-from schemas.users import UserCreate, UserDB
+from schemas.users import UserCreate, UserDB, UserUpdate
 
 router = APIRouter()
 
@@ -54,7 +54,7 @@ async def user_get(user_id: int, request: Request):
     summary="update user data by id overwriting all attributes",
     response_model=UserDB
 )
-async def user_put(user_id: int, user: UserCreate, request: Request):
+async def user_put(user_id: int, user: UserUpdate, request: Request):
     db = request.app.state.db
     res = await db.execute(select(User).filter(User.id == user_id))
     found_users = res.scalar_one_or_none()
@@ -66,7 +66,7 @@ async def user_put(user_id: int, user: UserCreate, request: Request):
     await db.execute(
         update(User).
         where(User.id == user_id).
-        values(user.dict())
+        values(user.dict(exclude_none=True))
     )
     return found_users
 

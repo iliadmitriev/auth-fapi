@@ -3,7 +3,7 @@ import uuid
 import pytest
 from starlette import status
 
-from schemas import UserCreate
+from schemas import UserCreate, UserUpdate
 
 
 @pytest.mark.asyncio
@@ -50,24 +50,31 @@ async def test_post_user_create_400_bad_request(get_client, get_app, add_some_us
 
 
 @pytest.mark.asyncio
-@pytest.mark.dependency(depends=['test_post_user_create_201_created'])
-async def test_put_user_update_200_ok(get_client, get_app):
+@pytest.mark.parametrize('data', [
+    {
+        'confirmed': True,
+        'is_active': False,
+        'password': 'new_password',
+        'is_superuser': True,
+        'email': f'{uuid.uuid4().hex}@example.com'
+    },
+    {
+        'confirmed': True,
+        'is_active': False,
+        'is_superuser': True,
+    }
+])
+async def test_put_user_update_200_ok(get_client, get_app, data):
     user = await test_post_user_create_201_created(get_client, get_app)
-    new_random_email = f'{uuid.uuid4().hex}@example.com'
-    user['email'] = new_random_email
-    user['confirmed'] = True
-    user['is_active'] = False
-    user['password'] = 'new_password'
-    user['is_superuser'] = True
-    new_user = UserCreate(**user)
+    new_user = UserUpdate(**data)
     res = await get_client.put(get_app.url_path_for('users:put', user_id=user['id']), content=new_user.json())
     assert res.status_code == status.HTTP_200_OK
-    assert res.json().get('confirmed')
-    assert not res.json().get('is_active')
-    assert res.json().get('is_superuser')
+    assert res.json().get('confirmed') == data.get('confirmed')
+    assert res.json().get('is_active') == data.get('is_active')
+    assert res.json().get('is_superuser') == data.get('is_superuser')
     assert res.json().get('id') == user['id']
-    assert res.json().get('email') == new_random_email
-    assert res.json().get('password') == 'new_password'
+    assert res.json().get('email') == data.get('email') or user['email']
+    assert res.json().get('password') == data.get('password') or user['password']
     assert 'created' in res.json()
     assert 'last_login' in res.json()
 
