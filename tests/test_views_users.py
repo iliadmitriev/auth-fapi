@@ -122,3 +122,27 @@ async def test_patch_user_update_404_not_found(get_client, get_app):
     res = await get_client.patch(get_app.url_path_for('users:patch', user_id=9999), content=new_user.json())
     assert res.status_code == status.HTTP_404_NOT_FOUND
     assert res.json() == {'detail': f"User with id '9999' not found"}
+
+
+@pytest.mark.asyncio
+async def test_delete_user_200_ok(get_client, get_app):
+    user = await test_post_user_create_201_created(get_client, get_app)
+    res = await get_client.delete(
+        get_app.url_path_for('users:delete', user_id=user['id']),
+    )
+    assert res.status_code == status.HTTP_200_OK
+    assert res.json().get('id') == user['id']
+    assert res.json().get('confirmed') == user['confirmed']
+    assert res.json().get('is_active') == user['is_active']
+    assert res.json().get('is_superuser') == user['is_superuser']
+    assert res.json().get('password') == user['password']
+    assert res.json().get('email') == user['email']
+    assert 'last_login' in res.json()
+    assert 'created' in res.json()
+
+
+@pytest.mark.asyncio
+async def test_delete_user_404_not_found(get_client, get_app):
+    res = await get_client.delete(get_app.url_path_for('users:patch', user_id=9999))
+    assert res.status_code == status.HTTP_404_NOT_FOUND
+    assert res.json() == {'detail': f"User with id '9999' not found"}
