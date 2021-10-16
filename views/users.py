@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from sqlalchemy import update
 from sqlalchemy.future import select
 from starlette import status
 from starlette.requests import Request
@@ -45,3 +46,27 @@ async def user_get(user_id: int, request: Request):
     if not db_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return db_user
+
+
+@router.put(
+    '/users/{user_id}',
+    name="users:put",
+    summary="update user data by id overwriting all attributes",
+    response_model=UserDB
+)
+async def user_put(user_id: int, user: UserCreate, request: Request):
+    db = request.app.state.db
+    res = await db.execute(select(User).filter(User.id == user_id))
+    found_users = res.scalar_one_or_none()
+    if not found_users:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id '{user_id}' not found"
+        )
+    await db.execute(
+        update(User).
+        where(User.id == user_id).
+        values(user.dict())
+    )
+    return found_users
+
