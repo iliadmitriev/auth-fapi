@@ -73,8 +73,8 @@ async def test_put_user_update_200_ok(get_client, get_app, data):
     assert res.json().get('is_active') == data.get('is_active')
     assert res.json().get('is_superuser') == data.get('is_superuser')
     assert res.json().get('id') == user['id']
-    assert res.json().get('email') == data.get('email') or user['email']
-    assert res.json().get('password') == data.get('password') or user['password']
+    assert res.json().get('email') == (data.get('email') or user['email'])
+    assert res.json().get('password') == (data.get('password') or user['password'])
     assert 'created' in res.json()
     assert 'last_login' in res.json()
 
@@ -82,6 +82,43 @@ async def test_put_user_update_200_ok(get_client, get_app, data):
 @pytest.mark.asyncio
 async def test_put_user_update_404_not_found(get_client, get_app):
     user = await test_post_user_create_201_created(get_client, get_app)
-    new_user = UserCreate(**user)
-    res = await get_client.put(get_app.url_path_for('users:get-by-id', user_id=9999), content=new_user.json())
+    new_user = UserUpdate(**user)
+    res = await get_client.put(get_app.url_path_for('users:put', user_id=9999), content=new_user.json())
     assert res.status_code == status.HTTP_404_NOT_FOUND
+    assert res.json() == {'detail': f"User with id '9999' not found"}
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('data', [
+    {
+        'email': f'{uuid.uuid4().hex}@example.com'
+    },
+    {
+        'confirmed': True,
+    }
+])
+async def test_patch_user_update_200_ok(get_client, get_app, data):
+    user = await test_post_user_create_201_created(get_client, get_app)
+    new_user = UserUpdate(**data)
+    res = await get_client.patch(
+        get_app.url_path_for('users:patch', user_id=user['id']),
+        content=new_user.json(exclude_defaults=True, exclude_unset=True)
+    )
+    assert res.status_code == status.HTTP_200_OK
+    assert res.json().get('id') == user['id']
+    assert res.json().get('confirmed') == (data.get('confirmed') or user['confirmed'])
+    assert res.json().get('is_active') == (data.get('is_active') or user['is_active'])
+    assert res.json().get('is_superuser') == (data.get('is_superuser') or user['is_superuser'])
+    assert res.json().get('password') == (data.get('password') or user['password'])
+    assert res.json().get('email') == (data.get('email') or user['email'])
+    assert 'last_login' in res.json()
+    assert 'created' in res.json()
+
+
+@pytest.mark.asyncio
+async def test_patch_user_update_404_not_found(get_client, get_app):
+    user = await test_post_user_create_201_created(get_client, get_app)
+    new_user = UserUpdate(**user)
+    res = await get_client.patch(get_app.url_path_for('users:patch', user_id=9999), content=new_user.json())
+    assert res.status_code == status.HTTP_404_NOT_FOUND
+    assert res.json() == {'detail': f"User with id '9999' not found"}
