@@ -57,16 +57,38 @@ async def user_get(user_id: int, request: Request):
 async def user_put(user_id: int, user: UserUpdate, request: Request):
     db = request.app.state.db
     res = await db.execute(select(User).filter(User.id == user_id))
-    found_users = res.scalar_one_or_none()
-    if not found_users:
+    found_user = res.scalar_one_or_none()
+    if not found_user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User with id '{user_id}' not found"
         )
-    await db.execute(
-        update(User).
-        where(User.id == user_id).
-        values(user.dict(exclude_none=True))
-    )
-    return found_users
+    for var, value in user.dict(exclude_none=True).items():
+        setattr(found_user, var, value)
+    db.add(found_user)
+    await db.commit()
+    await db.refresh(found_user)
+    return found_user
 
+
+@router.patch(
+    '/users/{user_id}',
+    name="users:patch",
+    summary="partially update user attributes by id",
+    response_model=UserDB
+)
+async def user_patch(user_id: int, user: UserUpdate, request: Request):
+    db = request.app.state.db
+    res = await db.execute(select(User).filter(User.id == user_id))
+    found_user = res.scalar_one_or_none()
+    if not found_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id '{user_id}' not found"
+        )
+    for var, value in user.dict(exclude_unset=True).items():
+        setattr(found_user, var, value)
+    db.add(found_user)
+    await db.commit()
+    await db.refresh(found_user)
+    return found_user
