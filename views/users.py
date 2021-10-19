@@ -1,12 +1,33 @@
+from typing import List, Any
+
 from fastapi import APIRouter, HTTPException
 from sqlalchemy.future import select
 from starlette import status
 from starlette.requests import Request
 
 from models.users import User
-from schemas.users import UserCreate, UserDB, UserUpdate
+from schemas.users import UserCreate, UserDB, UserUpdate, UserOut
 
 router = APIRouter()
+
+
+@router.get(
+    '/users/',
+    name='users:get',
+    summary='get list of users',
+    status_code=status.HTTP_200_OK,
+    description='get list of users with limit and skip page',
+    response_model=List[UserOut]
+)
+async def user_get_list(
+        request: Request,
+        skip: int = 0,
+        limit: int = 50
+) -> Any:
+    db = request.app.state.db
+    res = await db.execute(select(User).offset(skip).limit(limit))
+    found_users = res.scalars().all()
+    return found_users
 
 
 @router.post(
