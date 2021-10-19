@@ -29,6 +29,9 @@ class UserOut(UserBase):
     created: Optional[datetime] = None
     last_login: Optional[datetime] = None
 
+    class Config:
+        orm_mode = True
+
 
 # user attributes stored in db
 class UserDB(UserBase):
