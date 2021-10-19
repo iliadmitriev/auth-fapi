@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 
-from views import items, users, welcome, healthcheck
+from views import items, users, welcome, healthcheck, login
 from db.database import app_init_db, app_dispose_db
 
 app = FastAPI()
@@ -20,6 +20,7 @@ async def shutdown_event():
 app.include_router(items.router, tags=['items'])
 app.include_router(users.router, tags=['users'])
 app.include_router(healthcheck.router, tags=['status'])
+app.include_router(login.router, tags=['login'])
 app.include_router(welcome.router)
 
 if __name__ == "__main__":  # pragma: no cover

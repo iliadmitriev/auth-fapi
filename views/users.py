@@ -26,7 +26,7 @@ async def user_post(user: UserCreate, request: Request):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"User with email '{user.email}' already exists"
         )
-    user_db = User(**user.dict())  # type: ignore
+    user_db = User(**user.dict())
     db.add(user_db)
     await db.commit()
     await db.refresh(user_db)
