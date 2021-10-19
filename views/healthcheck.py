@@ -13,7 +13,10 @@ router = APIRouter()
 )
 async def health_check(request: Request):
     db = request.app.state.db
-    res = await db.execute("select 1")
-    one = res.scalar()
-    assert str(one) == '1'
-    return {"message": "OK"}
+    try:
+        res = await db.execute("select 1")
+        one = res.scalar()
+        assert str(one) == '1'
+        return {'detail': 'OK'}
+    except (ConnectionRefusedError, InterfaceError):
+        raise HTTPException(detail="connection failed", status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
