@@ -7,6 +7,19 @@ from schemas import UserCreate, UserUpdate
 
 
 @pytest.mark.asyncio
+async def test_get_users_list(get_client, get_app, add_some_user):
+    res = await get_client.get(get_app.url_path_for('users:get'))
+    data = res.json()
+    assert res.status_code == status.HTTP_200_OK
+    user = next(item for item in data if item["id"] == add_some_user.id)
+    assert user.get('id') == add_some_user.id
+    assert user.get('email') == add_some_user.email
+    assert user.get('is_active') == add_some_user.is_active
+    assert user.get('confirmed') == add_some_user.confirmed
+    assert user.get('is_superuser') == add_some_user.is_superuser
+
+
+@pytest.mark.asyncio
 async def test_get_user_by_id(get_client, add_some_user, get_app):
     res = await get_client.get(get_app.url_path_for('users:get-by-id', user_id=add_some_user.id))
     assert res.status_code == status.HTTP_200_OK
