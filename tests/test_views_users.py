@@ -4,6 +4,7 @@ import pytest
 from starlette import status
 
 from schemas import UserCreate, UserUpdate
+from utils.password import password_hash_ctx
 
 
 @pytest.mark.asyncio
@@ -48,7 +49,7 @@ async def test_post_user_create_201_created(get_client, get_app):
     assert res.json().get('is_active')
     assert not res.json().get('is_superuser')
     assert res.json().get('email') == random_email
-    assert res.json().get('password') == 'password'
+    assert password_hash_ctx.verify('password', res.json().get('password'))
     assert 'created' in res.json()
     assert 'last_login' in res.json()
     return res.json()
@@ -87,7 +88,11 @@ async def test_put_user_update_200_ok(get_client, get_app, data):
     assert res.json().get('is_superuser') == data.get('is_superuser')
     assert res.json().get('id') == user['id']
     assert res.json().get('email') == (data.get('email') or user['email'])
-    assert res.json().get('password') == (data.get('password') or user['password'])
+    if not data.get('password') is None:
+        assert password_hash_ctx.verify(
+            data.get('password'),
+            res.json().get('password')
+        )
     assert 'created' in res.json()
     assert 'last_login' in res.json()
 
@@ -108,7 +113,10 @@ async def test_put_user_update_404_not_found(get_client, get_app):
     },
     {
         'confirmed': True,
-    }
+    },
+    {
+        'password': 'absolutely_new_pass',
+    },
 ])
 async def test_patch_user_update_200_ok(get_client, get_app, data):
     user = await test_post_user_create_201_created(get_client, get_app)
@@ -122,7 +130,11 @@ async def test_patch_user_update_200_ok(get_client, get_app, data):
     assert res.json().get('confirmed') == (data.get('confirmed') or user['confirmed'])
     assert res.json().get('is_active') == (data.get('is_active') or user['is_active'])
     assert res.json().get('is_superuser') == (data.get('is_superuser') or user['is_superuser'])
-    assert res.json().get('password') == (data.get('password') or user['password'])
+    if not data.get('password') is None:
+        assert password_hash_ctx.verify(
+            data.get('password'),
+            res.json().get('password')
+        )
     assert res.json().get('email') == (data.get('email') or user['email'])
     assert 'last_login' in res.json()
     assert 'created' in res.json()

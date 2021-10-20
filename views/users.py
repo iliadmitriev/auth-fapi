@@ -7,6 +7,7 @@ from starlette.requests import Request
 
 from models.users import User
 from schemas.users import UserCreate, UserDB, UserUpdate, UserOut
+from utils.password import password_hash_ctx
 
 router = APIRouter()
 
@@ -48,6 +49,7 @@ async def user_post(user: UserCreate, request: Request):
             detail=f"User with email '{user.email}' already exists"
         )
     user_db = User(**user.dict())
+    user_db.password = password_hash_ctx.hash(user_db.password)
     db.add(user_db)
     await db.commit()
     await db.refresh(user_db)
@@ -85,6 +87,8 @@ async def user_put(user_id: int, user: UserUpdate, request: Request):
         )
     for var, value in user.dict(exclude_none=True).items():
         setattr(found_user, var, value)
+    if user.dict(exclude_none=True).get('password') is not None:
+        found_user.password = password_hash_ctx.hash(user.password)
     db.add(found_user)
     await db.commit()
     await db.refresh(found_user)
@@ -108,6 +112,8 @@ async def user_patch(user_id: int, user: UserUpdate, request: Request):
         )
     for var, value in user.dict(exclude_unset=True).items():
         setattr(found_user, var, value)
+    if user.dict(exclude_none=True).get('password') is not None:
+        found_user.password = password_hash_ctx.hash(user.password)
     db.add(found_user)
     await db.commit()
     await db.refresh(found_user)
