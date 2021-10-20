@@ -62,7 +62,7 @@ async def user_post(user: UserCreate, request: Request):
     summary="get user by id",
     response_model=UserDB
 )
-async def user_get(user_id: int, request: Request):
+async def user_get_by_id(user_id: int, request: Request):
     res = await request.app.state.db.execute(select(User).filter(User.id == user_id))
     db_user = res.scalar()
     if not db_user:
@@ -77,21 +77,7 @@ async def user_get(user_id: int, request: Request):
     response_model=UserDB
 )
 async def user_put(user_id: int, user: UserUpdate, request: Request):
-    db = request.app.state.db
-    res = await db.execute(select(User).filter(User.id == user_id))
-    found_user = res.scalar_one_or_none()
-    if not found_user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with id '{user_id}' not found"
-        )
-    for var, value in user.dict(exclude_none=True).items():
-        setattr(found_user, var, value)
-    if user.dict(exclude_none=True).get('password') is not None:
-        found_user.password = password_hash_ctx.hash(user.password)
-    db.add(found_user)
-    await db.commit()
-    await db.refresh(found_user)
+    found_user = await update_user_field(request, user, user_id, exclude_none=True)
     return found_user
 
 
@@ -102,6 +88,11 @@ async def user_put(user_id: int, user: UserUpdate, request: Request):
     response_model=UserDB
 )
 async def user_patch(user_id: int, user: UserUpdate, request: Request):
+    found_user = await update_user_field(request, user, user_id, exclude_unset=True)
+    return found_user
+
+
+async def update_user_field(request, user, user_id, **kwargs):
     db = request.app.state.db
     res = await db.execute(select(User).filter(User.id == user_id))
     found_user = res.scalar_one_or_none()
@@ -110,7 +101,7 @@ async def user_patch(user_id: int, user: UserUpdate, request: Request):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User with id '{user_id}' not found"
         )
-    for var, value in user.dict(exclude_unset=True).items():
+    for var, value in user.dict(**kwargs).items():
         setattr(found_user, var, value)
     if user.dict(exclude_none=True).get('password') is not None:
         found_user.password = password_hash_ctx.hash(user.password)
@@ -126,7 +117,7 @@ async def user_patch(user_id: int, user: UserUpdate, request: Request):
     summary="delete user by id",
     response_model=UserDB
 )
-async def user_patch(user_id: int, request: Request):
+async def user_delete(user_id: int, request: Request):
     db = request.app.state.db
     res = await db.execute(select(User).filter(User.id == user_id))
     found_user = res.scalar_one_or_none()
