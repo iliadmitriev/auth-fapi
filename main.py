@@ -17,11 +17,11 @@ async def shutdown_event():
     await app_dispose_db(app)
 
 
-app.include_router(items.router, tags=['items'])
-app.include_router(users.router, tags=['users'])
-app.include_router(healthcheck.router, tags=['status'])
 app.include_router(login.router, tags=['login'])
+app.include_router(users.router, tags=['users'])
+app.include_router(items.router, tags=['items'])
 app.include_router(welcome.router)
+app.include_router(healthcheck.router, tags=['status'])
 
 if __name__ == "__main__":  # pragma: no cover
     uvicorn.run(app, host="0.0.0.0", port=8000)  # type: ignore
