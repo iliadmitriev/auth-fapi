@@ -1,7 +1,7 @@
 from passlib.context import CryptContext
 
 # ctx.hash(secret)
-# ctx.verify(secret)
+# ctx.verify(secret, hash)
 # ctx.needs_update(hash)
 # ctx.verify_and_update(secret, hash)
 
