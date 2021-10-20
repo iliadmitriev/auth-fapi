@@ -39,7 +39,7 @@ PyYAML==6.0
 requests==2.26.0
 rfc3986==1.5.0
 sniffio==1.2.0
-SQLAlchemy==1.4.25
+SQLAlchemy==1.4.26
 starlette==0.16.0
 toml==0.10.2
 tomli==1.2.1
