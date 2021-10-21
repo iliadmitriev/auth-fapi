@@ -19,9 +19,16 @@ async def test_init_redis():
     from_url_mock.assert_called_once()
 
 
+def async_return(result):
+    f = asyncio.Future()
+    f.set_result(result)
+    return f
+
+
 @pytest.mark.asyncio
 async def test_dispose_redis():
-    app = mock.AsyncMock()
+    app = mock.MagicMock()
+    app.state.redis.close = mock.MagicMock(return_value=async_return(None))
     await app_dispose_redis(app)
     app.state.redis.close.assert_called_once()
 
