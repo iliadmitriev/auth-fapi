@@ -1,7 +1,11 @@
+import uuid
+
 from fastapi import APIRouter, HTTPException
 from sqlalchemy.exc import InterfaceError
 from starlette import status
 from starlette.requests import Request
+
+from db.redis import get_redis_key
 
 router = APIRouter()
 
@@ -13,10 +17,12 @@ router = APIRouter()
 )
 async def health_check(request: Request):
     db = request.app.state.db
+    redis = request.app.state.redis
     try:
         res = await db.execute("select 1")
         one = res.scalar()
         assert str(one) == '1'
+        await get_redis_key(redis, uuid.uuid4().hex)
         return {'detail': 'OK'}
-    except (ConnectionRefusedError, InterfaceError):
+    except (ConnectionRefusedError, InterfaceError, ConnectionError):
         raise HTTPException(detail="connection failed", status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
