@@ -25,7 +25,7 @@ pip install -r requirements.txt
 
 4. Create database
 
-* for postgresql as database
+for postgresql as database
 
 ```shell
 # setup db, user and password
@@ -40,7 +40,7 @@ docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
     -p 5432:5432 --env-file .env_postgres postgres:14-alpine
 ```
 
-* for mysql as database
+for mysql as database
 
 ```shell
 # setup db, user and password
@@ -58,7 +58,7 @@ docker run -d --name auth-fapi-mariadb --hostname auth-fapi-mariadb \
 
 4. configure application environment variables
 
-* for postgresql
+for postgresql
 
 ```shell
 cat > .env << _EOF_
@@ -73,7 +73,7 @@ _EOF_
 export $(cat .env | xargs)
 ```
 
-* for mysql
+for mysql
 
 ```shell
 cat > .env << _EOF_
@@ -156,7 +156,7 @@ docker build -t auth-fapi ./
 
 ## Run docker container
 
-* setup db environment and run db container
+setup db environment and run db container
 
 ```shell
 # setup db, user and password
@@ -171,7 +171,7 @@ docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
     -p 5432:5432 --env-file .env_postgres postgres:13.4-alpine3.14
 ```
 
-* setup environment for application container 
+setup environment for application container 
 
 ```shell
 # setup db, user and password
@@ -185,14 +185,14 @@ DATABASE_PASSWORD=authsecret
 _EOF_
 ```
 
-* migrate
+migrate
 
 ```shell
 docker run -it --rm --env-file .env auth-fapi:latest \
        alembic upgrade head
 ```
 
-* run application container
+run application container
 
 ```shell
 docker run -d -p 8000:8000 --name auth-fapi --hostname auth-fapi \
