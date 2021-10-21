@@ -3,6 +3,7 @@ import pathlib
 import sys
 from unittest import mock
 
+import aioredis
 import pytest
 from alembic.config import Config
 from alembic.operations import Operations
@@ -73,6 +74,15 @@ def database_test_url():
 
 
 @pytest.fixture(scope='session')
+def redis_test_url():
+    """
+    generate test string for redis connection
+    :return:
+    """
+    return "redis://127.0.0.1:6379/0"
+
+
+@pytest.fixture(scope='session')
 async def engine(database_test_url):
     """
     create async sqlalchemy engine and run alembic migrations
@@ -85,17 +95,32 @@ async def engine(database_test_url):
 
 
 @pytest.fixture(scope='session')
-async def get_app(engine, database_test_url):
+async def get_redis(redis_test_url):
+    """
+    create redis test connection pool
+    :param redis_test_url:
+    :return:
+    """
+    return aioredis.from_url(
+        redis_test_url
+    )
+
+
+@pytest.fixture(scope='session')
+async def get_app(engine, database_test_url, get_redis, redis_test_url):
     """
     create FastApi test application with initialized database
     """
     from config import connection
     connection.DATABASE_URL = database_test_url
+    connection.REDIS_URL = redis_test_url
     with mock.patch('sqlalchemy.ext.asyncio.create_async_engine') as create_eng:
-        create_eng.return_value = engine
-        from main import app
-        async with LifespanManager(app):
-            yield app
+        with mock.patch('aioredis.from_url') as create_redis:
+            create_redis.return_value = get_redis
+            create_eng.return_value = engine
+            from main import app
+            async with LifespanManager(app):
+                yield app
 
 
 @pytest.fixture()
