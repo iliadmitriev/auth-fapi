@@ -25,6 +25,7 @@ pip install -r requirements.txt
 
 4. Create database
 * for postgresql as database
+
 ```shell
 # setup db, user and password
 cat > .env_postgres << _EOF_
@@ -39,6 +40,7 @@ docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
 ```
 
 * for mysql as database
+
 ```shell
 # setup db, user and password
 cat > .env_mysql << _EOF
@@ -55,6 +57,7 @@ docker run -d --name auth-fapi-mariadb --hostname auth-fapi-mariadb \
 
 4. configure application environment variables
 * for postgresql
+
 ```shell
 cat > .env << _EOF_
 DATABASE_DRIVER=postgresql+asyncpg
@@ -69,6 +72,7 @@ export $(cat .env | xargs)
 ```
 
 * for mysql
+
 ```shell
 cat > .env << _EOF_
 DATABASE_DRIVER=mysql+asyncmy
@@ -83,6 +87,7 @@ export $(cat .env | xargs)
 ```
 
 6. Run migrations
+
 ```shell
 alembic upgrade head
 ```
@@ -98,25 +103,30 @@ pip install pytest requests
 ```
 
 ## run tests
+
 ```shell
 pytest -v
 ```
 
 ## install coverage
+
 ```shell
 pip install pytest-coverage
 ```
 
 ## run tests with coverage
+
 ```shell
 pytest -v --cov=.
 ```
 ## run tests with coverage and check 100%
+
 ```shell
 pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100
 ```
 
 ## Coverage HTML report
+
 ```shell
 # run tests and generate report
 pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100 --cov-report=html
@@ -136,11 +146,13 @@ uvicorn main:app --reload
 # Docker
 
 ## Build image
+
 ```shell
 docker build -t auth-fapi ./
 ```
 
 ## Run docker container
+
 * setup db environment and run db container
 
 ```shell
