@@ -43,13 +43,26 @@ async def test_get_user_by_id_not_exists(get_client, add_some_user, get_app):
 async def test_post_user_create_201_created(get_client, get_app):
     random_email = f'{uuid.uuid4().hex}@example.com'
     user = UserCreate(email=random_email, password='password')
+    user_created = await create_new_user(get_app, get_client, user)
+    assert not user_created.get('is_superuser')
+    return user_created
+
+
+async def create_new_user(get_app, get_client, user) -> dict:
+    """
+    Creates a new user using API post method
+
+    :param get_app: application instance, which is used to get path for user creation url
+    :param get_client: AsyncClient instance is performing http request
+    :param user: user to be posted to API method
+    :return: dict created user
+    """
     res = await get_client.post(get_app.url_path_for('users:post'), content=user.json())
     assert res.status_code == status.HTTP_201_CREATED
     assert not res.json().get('confirmed')
     assert res.json().get('is_active')
-    assert not res.json().get('is_superuser')
-    assert res.json().get('email') == random_email
-    assert password_hash_ctx.verify('password', res.json().get('password'))
+    assert res.json().get('email') == user.email
+    assert password_hash_ctx.verify(user.password, res.json().get('password'))
     assert 'created' in res.json()
     assert 'last_login' in res.json()
     return res.json()

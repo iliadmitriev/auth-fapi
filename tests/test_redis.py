@@ -20,6 +20,19 @@ async def test_init_redis():
 
 
 def async_return(result):
+    """
+    This func is used as a return value for using in await statements for python 3.7 hack
+    In python 3.8 there is AsyncMock for that purpose.
+
+    Usage:
+
+        test = mock.MagicMock(return_value=async_return(some))
+        res = await test()
+        assert res == some
+
+    :param result: returning result
+    :return:
+    """
     f = asyncio.Future()
     f.set_result(result)
     return f

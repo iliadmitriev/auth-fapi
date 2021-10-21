@@ -1,2 +1,2 @@
 from .users import UserBase, UserCreate, UserUpdate, UserDB
-from .login import Register
+from .login import Register, Auth
