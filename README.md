@@ -24,7 +24,9 @@ pip install -r requirements.txt
 ```
 
 4. Create database
-* for postgresql as database
+
+for postgresql as database
+
 ```shell
 # setup db, user and password
 cat > .env_postgres << _EOF_
@@ -37,7 +39,9 @@ _EOF_
 docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
     -p 5432:5432 --env-file .env_postgres postgres:14-alpine
 ```
-* for mysql as database
+
+for mysql as database
+
 ```shell
 # setup db, user and password
 cat > .env_mysql << _EOF
@@ -52,8 +56,10 @@ docker run -d --name auth-fapi-mariadb --hostname auth-fapi-mariadb \
               --env-file .env_mysql -p 3306:3306 mariadb
 ```
 
-4. configure application environment variables
-* for postgresql
+5. configure application environment variables
+
+for postgresql
+
 ```shell
 cat > .env << _EOF_
 DATABASE_DRIVER=postgresql+asyncpg
@@ -66,7 +72,9 @@ _EOF_
 
 export $(cat .env | xargs)
 ```
-* for mysql
+
+for mysql
+
 ```shell
 cat > .env << _EOF_
 DATABASE_DRIVER=mysql+asyncmy
@@ -81,6 +89,7 @@ export $(cat .env | xargs)
 ```
 
 6. Run migrations
+
 ```shell
 alembic upgrade head
 ```
@@ -96,25 +105,31 @@ pip install pytest requests
 ```
 
 ## run tests
+
 ```shell
 pytest -v
 ```
 
 ## install coverage
+
 ```shell
 pip install pytest-coverage
 ```
 
 ## run tests with coverage
+
 ```shell
 pytest -v --cov=.
 ```
+
 ## run tests with coverage and check 100%
+
 ```shell
 pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100
 ```
 
 ## Coverage HTML report
+
 ```shell
 # run tests and generate report
 pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100 --cov-report=html
@@ -134,12 +149,15 @@ uvicorn main:app --reload
 # Docker
 
 ## Build image
+
 ```shell
 docker build -t auth-fapi ./
 ```
 
 ## Run docker container
-* setup db environment and run db container
+
+setup db environment and run db container
+
 ```shell
 # setup db, user and password
 cat > .env_postgres << _EOF_
@@ -153,7 +171,8 @@ docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
     -p 5432:5432 --env-file .env_postgres postgres:13.4-alpine3.14
 ```
 
-* setup environment for application container 
+setup environment for application container 
+
 ```shell
 # setup db, user and password
 cat > .env << _EOF_
@@ -165,12 +184,16 @@ DATABASE_USER=auth
 DATABASE_PASSWORD=authsecret
 _EOF_
 ```
-* migrate
+
+migrate
+
 ```shell
 docker run -it --rm --env-file .env auth-fapi:latest \
        alembic upgrade head
 ```
-* run application container
+
+run application container
+
 ```shell
 docker run -d -p 8000:8000 --name auth-fapi --hostname auth-fapi \
              --env-file .env auth-fapi:latest
