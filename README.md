@@ -24,7 +24,9 @@ pip install -r requirements.txt
 ```
 
 4. Create database
+
 for postgresql as database
+
 ```shell
 # setup db, user and password
 cat > .env_postgres << _EOF_
@@ -54,7 +56,7 @@ docker run -d --name auth-fapi-mariadb --hostname auth-fapi-mariadb \
               --env-file .env_mysql -p 3306:3306 mariadb
 ```
 
-4. configure application environment variables
+5. configure application environment variables
 
 for postgresql
 
