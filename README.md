@@ -37,6 +37,7 @@ _EOF_
 docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
     -p 5432:5432 --env-file .env_postgres postgres:14-alpine
 ```
+
 * for mysql as database
 ```shell
 # setup db, user and password
@@ -66,6 +67,7 @@ _EOF_
 
 export $(cat .env | xargs)
 ```
+
 * for mysql
 ```shell
 cat > .env << _EOF_
@@ -140,6 +142,7 @@ docker build -t auth-fapi ./
 
 ## Run docker container
 * setup db environment and run db container
+
 ```shell
 # setup db, user and password
 cat > .env_postgres << _EOF_
@@ -154,6 +157,7 @@ docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
 ```
 
 * setup environment for application container 
+
 ```shell
 # setup db, user and password
 cat > .env << _EOF_
@@ -165,12 +169,16 @@ DATABASE_USER=auth
 DATABASE_PASSWORD=authsecret
 _EOF_
 ```
+
 * migrate
+
 ```shell
 docker run -it --rm --env-file .env auth-fapi:latest \
        alembic upgrade head
 ```
+
 * run application container
+
 ```shell
 docker run -d -p 8000:8000 --name auth-fapi --hostname auth-fapi \
              --env-file .env auth-fapi:latest
