@@ -24,6 +24,7 @@ pip install -r requirements.txt
 ```
 
 4. Create database
+
 * for postgresql as database
 
 ```shell
@@ -56,6 +57,7 @@ docker run -d --name auth-fapi-mariadb --hostname auth-fapi-mariadb \
 ```
 
 4. configure application environment variables
+
 * for postgresql
 
 ```shell
@@ -119,6 +121,7 @@ pip install pytest-coverage
 ```shell
 pytest -v --cov=.
 ```
+
 ## run tests with coverage and check 100%
 
 ```shell
