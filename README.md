@@ -24,9 +24,7 @@ pip install -r requirements.txt
 ```
 
 4. Create database
-
 for postgresql as database
-
 ```shell
 # setup db, user and password
 cat > .env_postgres << _EOF_
