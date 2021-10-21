@@ -1,11 +1,16 @@
 import uuid
+from unittest import mock
 
 import pytest
 from sqlalchemy.future import select
 from starlette import status
 
+from config import REFRESH_TOKEN_EXPIRE
 from models import User
-from schemas import Register
+from schemas import Register, UserCreate, Auth
+from tests.test_redis import async_return
+from tests.test_views_users import create_new_user
+from utils.auth import decode_token
 from utils.password import password_hash_ctx
 
 
@@ -29,3 +34,74 @@ async def test_login_register_fail_exists(get_client, get_app, add_some_user):
     res = await get_client.post(get_app.url_path_for('login:register'), content=register_exists.json())
     assert res.status_code == status.HTTP_400_BAD_REQUEST
 
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('data', [
+    {
+        'email': f'{uuid.uuid4().hex}@example.com',
+        'password': 'new_password',
+        'is_superuser': False
+    },
+    {
+        'email': f'{uuid.uuid4().hex}@example.com',
+        'password': 'new_password',
+        'is_superuser': True
+    }
+])
+async def test_login_auth_success(get_client, get_app, data):
+    user = UserCreate(
+        email=data.get('email'),
+        password=data.get('password'),
+        is_superuser=data.get('is_superuser')
+    )
+    created_user = await create_new_user(get_app, get_client, user)
+    auth_user = Auth(**created_user)
+    auth_user.password = data.get('password')
+    with mock.patch('views.login.set_redis_key',
+                    mock.MagicMock(return_value=async_return(True))) as set_redis_mock:
+        res = await get_client.post(get_app.url_path_for('login:auth'), content=auth_user.json())
+    assert res.status_code == status.HTTP_200_OK
+    assert 'access_token' in res.json()
+    assert 'refresh_token' in res.json()
+    assert len(res.json().get('access_token').split('.')) == 3, "JWT token should have 3 segments"
+    assert len(res.json().get('refresh_token').split('.')) == 3, "JWT token should have 3 segments"
+    access_payload = decode_token(res.json().get('access_token'))
+    refresh_payload = decode_token(res.json().get('refresh_token'))
+    assert 'exp' in access_payload
+    assert 'jti' in access_payload
+    assert access_payload.get('email') == data.get('email')
+    assert access_payload.get('id') == created_user.get('id')
+    assert 'exp' in refresh_payload
+    assert 'exp' in access_payload
+    assert refresh_payload.get('email') == data.get('email')
+    assert refresh_payload.get('id') == created_user.get('id')
+    set_redis_mock.assert_called_once_with(
+        get_app.state.redis,
+        res.json().get('refresh_token'), '1',
+        REFRESH_TOKEN_EXPIRE)
+
+
+@pytest.mark.asyncio
+async def test_login_auth_not_found(get_client, get_app):
+    email = f'{uuid.uuid4().hex}@example.com'
+    password = 'new_password'
+    user = UserCreate(email=email, password=password)
+    with mock.patch('views.login.set_redis_key',
+                    mock.MagicMock(return_value=async_return(True))) as set_redis_mock:
+        res = await get_client.post(get_app.url_path_for('login:auth'), content=user.json())
+    assert res.status_code == status.HTTP_404_NOT_FOUND
+    set_redis_mock.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_login_auth_password_not_match(get_client, get_app):
+    email = f'{uuid.uuid4().hex}@example.com'
+    password = 'new_password_not_match'
+    user = UserCreate(email=email, password=password)
+    created_user = await create_new_user(get_app, get_client, user)
+    auth_user = Auth(**created_user)
+    with mock.patch('views.login.set_redis_key',
+                    mock.MagicMock(return_value=async_return(True))) as set_redis_mock:
+        res = await get_client.post(get_app.url_path_for('login:auth'), content=auth_user.json())
+    assert res.status_code == status.HTTP_404_NOT_FOUND
+    set_redis_mock.assert_not_called()
