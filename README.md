@@ -6,6 +6,24 @@
 
 This program is for educational purposes. It's created using FastAPI and pydantic.
 
+
+- [Auth microservice](#auth-microservice)
+- [Install](#install)
+- [Tests](#tests)
+  * [Install pytest](#install-pytest)
+  * [run tests](#run-tests)
+  * [install coverage](#install-coverage)
+  * [run tests with coverage](#run-tests-with-coverage)
+  * [run tests with coverage and check 100%](#run-tests-with-coverage-and-check-100-)
+  * [Coverage HTML report](#coverage-html-report)
+- [Start Application](#start-application)
+  * [Start with hot reload](#start-with-hot-reload)
+- [Docker](#docker)
+  * [Build image](#build-image)
+  * [Run docker container](#run-docker-container)
+- [Usage](#usage)
+  * [API documentation](#api-documentation)
+
 # Install
 
 1. Create virtual environment
@@ -56,7 +74,14 @@ docker run -d --name auth-fapi-mariadb --hostname auth-fapi-mariadb \
               --env-file .env_mysql -p 3306:3306 mariadb
 ```
 
-5. configure application environment variables
+5. Create redis instance
+
+```shell
+docker run -d --name auth-fapi-redis --hostname auth-fapi-redis \
+              -p 6379:6379 redis:6.2-alpine
+```
+
+6. configure application environment variables
 
 for postgresql
 
@@ -83,6 +108,16 @@ DATABASE_PORT=3306
 DATABASE_NAME=auth
 DATABASE_USER=auth
 DATABASE_PASSWORD=authsecret
+_EOF_
+
+export $(cat .env | xargs)
+```
+
+add redis url to `.env`
+
+```shell
+cat > .env << _EOF_
+REDIS_URL=redis://192.168.10.1:6379/0
 _EOF_
 
 export $(cat .env | xargs)
