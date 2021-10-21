@@ -1,8 +1,9 @@
 import uvicorn
 from fastapi import FastAPI
 
-from views import items, users, welcome, healthcheck, login
 from db.database import app_init_db, app_dispose_db
+from db.redis import app_init_redis, app_dispose_redis
+from views import items, users, welcome, healthcheck, login
 
 description = """
 **API with HTTP Bearer authorization using JWT token**
@@ -47,11 +48,13 @@ app = FastAPI(
 @app.on_event('startup')
 async def startup_event():
     await app_init_db(app)
+    await app_init_redis(app)
 
 
 @app.on_event('shutdown')
 async def shutdown_event():
     await app_dispose_db(app)
+    await app_dispose_redis(app)
 
 
 app.include_router(login.router, tags=['login'])

@@ -89,8 +89,8 @@ async def get_app(engine, database_test_url):
     """
     create FastApi test application with initialized database
     """
-    from config import db
-    db.DATABASE_URL = database_test_url
+    from config import connection
+    connection.DATABASE_URL = database_test_url
     with mock.patch('sqlalchemy.ext.asyncio.create_async_engine') as create_eng:
         create_eng.return_value = engine
         from main import app
