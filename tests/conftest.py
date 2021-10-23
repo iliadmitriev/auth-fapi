@@ -5,24 +5,26 @@ from unittest import mock
 
 import aioredis
 import pytest
+from aioredis import Redis
 from alembic.config import Config
 from alembic.operations import Operations
 from alembic.runtime.environment import EnvironmentContext
 from alembic.script import ScriptDirectory
-from httpx import AsyncClient
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
 from asgi_lifespan import LifespanManager
+from fastapi import FastAPI
+from httpx import AsyncClient
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine, AsyncConnection
+from sqlalchemy.orm import sessionmaker
 
 from models import Base, User
 from schemas.items import Item
 
 BASE_PATH = pathlib.Path(__file__).parent.parent
-sys.path.append(BASE_PATH)  # type: ignore
+sys.path.append(str(BASE_PATH))
 
 
 @pytest.fixture
-def item():
+def item() -> Item:
     """
     create test item object
     """
@@ -46,12 +48,12 @@ def do_run_migrations(connection, alembic_env):
             migration_context.run_migrations()
 
 
-async def async_migrate(engine, alembic_env):
+async def async_migrate(engine: AsyncEngine, alembic_env):
     async with engine.begin() as conn:
         await conn.run_sync(do_run_migrations, alembic_env)
 
 
-async def migrate(engine, url):
+async def migrate(engine: AsyncEngine, url: str):
     alembic_cfg = Config()
     alembic_cfg.set_main_option("script_location", "alembic")
     alembic_cfg.set_main_option("url", url)
@@ -61,31 +63,39 @@ async def migrate(engine, url):
     await async_migrate(engine, alembic_env)
 
 
-async def disconnect(engine):
+async def disconnect(engine: AsyncEngine):
+    """
+    Disposes a database engine
+    For sqlite3 in memory db this means destroying database with data
+    :param engine: async sqlalchemy engine to be disposed
+    :return: None
+    """
     await engine.dispose()
 
 
 @pytest.fixture(scope='session')
-def database_test_url():
+def database_test_url() -> str:
     """
     generate in memory sqlite db connect url for test purposes
+    :return: url string for test database connection
     """
     return "sqlite+aiosqlite://?cache=shared"  # noqa
 
 
 @pytest.fixture(scope='session')
-def redis_test_url():
+def redis_test_url() -> str:
     """
     generate test string for redis connection
-    :return:
+    :return: url string for redis test database connection
     """
     return "redis://127.0.0.1:6379/0"
 
 
 @pytest.fixture(scope='session')
-async def engine(database_test_url):
+async def engine(database_test_url: str) -> AsyncEngine:
     """
-    create async sqlalchemy engine and run alembic migrations
+    create async engine and run alembic migrations on database
+    :return: sqlalchemy async engine
     """
     url = database_test_url
     engine = create_async_engine(url, echo=False)
@@ -95,11 +105,11 @@ async def engine(database_test_url):
 
 
 @pytest.fixture(scope='session')
-async def get_redis(redis_test_url):
+async def get_redis(redis_test_url: str) -> Redis:
     """
-    create redis test connection pool
-    :param redis_test_url:
-    :return:
+    create redis test connection pool with url connection string provided
+    :param redis_test_url: url string
+    :return: Redis instance
     """
     return aioredis.from_url(
         redis_test_url
@@ -107,9 +117,19 @@ async def get_redis(redis_test_url):
 
 
 @pytest.fixture(scope='session')
-async def get_app(engine, database_test_url, get_redis, redis_test_url):
+async def get_app(
+        engine: AsyncEngine,
+        database_test_url: str,
+        get_redis: Redis,
+        redis_test_url: str
+) -> FastAPI:
     """
     create FastApi test application with initialized database
+    :param engine: async database engine instance
+    :param database_test_url: db connection url
+    :param get_redis: redis instance
+    :param redis_test_url: redis connection instance
+    :return: FastAPI wsgi application instance
     """
     from config import connection
     connection.DATABASE_URL = database_test_url
@@ -124,18 +144,22 @@ async def get_app(engine, database_test_url, get_redis, redis_test_url):
 
 
 @pytest.fixture()
-async def get_client(get_app):
+async def get_client(get_app: FastAPI) -> AsyncClient:
     """
     create a custom async http client based on httpx AsyncClient
+    :param: get_app: FastAPI wsgi application instance
+    :return: httpx async client
     """
     async with AsyncClient(app=get_app, base_url="http://testserver") as client:
         yield client
 
 
 @pytest.fixture(scope='session')
-async def add_some_user(engine):
+async def add_some_user(engine: AsyncEngine) -> User:
     """
     add test user to database and return it
+    :param engine: async database engine is used for db connection session
+    :return: a model.User instance
     """
     async_session = sessionmaker(engine, expire_on_commit=False, autoflush=False, class_=AsyncSession)
 
@@ -152,7 +176,8 @@ async def add_some_user(engine):
 @pytest.fixture(scope='session')
 def event_loop():
     """
-    Create or get already created running default event loop for whole session
+    Redefinition of base pytest-asyncio event_loop fixture,
+    which returns the same value but with scope session
     """
     try:
         loop = asyncio.get_running_loop()
