@@ -52,7 +52,7 @@ SQLAlchemy==1.4.26
 sqlalchemy-stubs==0.4
 starlette==0.16.0
 toml==0.10.2
-tomli==1.2.1
+tomli==1.2.2
 typing-extensions==3.10.0.2
 urllib3==1.26.7
 uvicorn==0.15.0
