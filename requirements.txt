@@ -4,7 +4,7 @@ alembic==1.7.4
 anyio==3.3.4
 asgi-lifespan==1.0.1
 asgiref==3.4.1
-async-timeout==4.0.0
+async-timeout==4.0.1
 asyncmy==0.2.3
 asyncpg==0.24.0
 attrs==21.2.0
