@@ -40,7 +40,7 @@ pytest-asyncio==0.16.0
 pytest-cov==3.0.0
 pytest-cover==3.0.0
 pytest-coverage==0.0
-python-dotenv==0.19.1
+python-dotenv==0.19.2
 python-jose==3.3.0
 PyYAML==6.0
 requests==2.26.0
