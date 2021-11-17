@@ -50,7 +50,7 @@ six==1.16.0
 sniffio==1.2.0
 SQLAlchemy==1.4.27
 sqlalchemy-stubs==0.4
-starlette==0.16.0
+starlette==0.17.0
 toml==0.10.2
 tomli==1.2.2
 typing-extensions==4.0.0
