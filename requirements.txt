@@ -6,7 +6,7 @@ asgi-lifespan==1.0.1
 asgiref==3.4.1
 async-timeout==4.0.1
 asyncmy==0.2.3
-asyncpg==0.24.0
+asyncpg==0.25.0
 attrs==21.2.0
 certifi==2021.10.8
 charset-normalizer==2.0.7
