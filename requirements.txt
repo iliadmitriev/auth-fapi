@@ -27,7 +27,7 @@ Mako==1.1.5
 MarkupSafe==2.0.1
 mypy==0.910
 mypy-extensions==0.4.3
-packaging==21.0
+packaging==21.2
 passlib==1.7.4
 pluggy==1.0.0
 py==1.11.0
