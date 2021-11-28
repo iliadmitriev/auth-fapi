@@ -23,7 +23,7 @@ httptools==0.3.0
 httpx==0.20.0
 idna==3.3
 iniconfig==1.1.1
-Mako==1.1.5
+Mako==1.1.6
 MarkupSafe==2.0.1
 mypy==0.910
 mypy-extensions==0.4.3
