@@ -55,7 +55,7 @@ toml==0.10.2
 tomli==1.2.2
 typing-extensions==4.0.1
 urllib3==1.26.7
-uvicorn==0.15.0
+uvicorn==0.16.0
 uvloop==0.16.0
 watchgod==0.7
 websockets==10.1
