@@ -43,7 +43,7 @@ pytest-coverage==0.0
 python-dotenv==0.19.2
 python-jose==3.3.0
 PyYAML==6.0
-requests==2.27.0
+requests==2.27.1
 rfc3986==1.5.0
 rsa==4.8
 six==1.16.0
