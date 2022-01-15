@@ -13,7 +13,7 @@ from alembic.script import ScriptDirectory
 from asgi_lifespan import LifespanManager
 from fastapi import FastAPI
 from httpx import AsyncClient
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine, AsyncConnection
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine
 from sqlalchemy.orm import sessionmaker
 
 from models import Base, User
@@ -65,8 +65,7 @@ async def migrate(engine: AsyncEngine, url: str):
 
 async def disconnect(engine: AsyncEngine):
     """
-    Disposes a database engine
-    For sqlite3 in memory db this means destroying database with data
+    Disposes a database engine and destroy all of its connections
     :param engine: async sqlalchemy engine to be disposed
     :return: None
     """
@@ -135,6 +134,7 @@ async def get_app(
     connection.DATABASE_URL = database_test_url
     connection.REDIS_URL = redis_test_url
     with mock.patch('sqlalchemy.ext.asyncio.create_async_engine') as create_eng:
+        # noinspection SpellCheckingInspection
         with mock.patch('aioredis.from_url') as create_redis:
             create_redis.return_value = get_redis
             create_eng.return_value = engine
@@ -145,9 +145,10 @@ async def get_app(
 
 @pytest.fixture()
 async def get_client(get_app: FastAPI) -> AsyncClient:
+    # noinspection SpellCheckingInspection
     """
     create a custom async http client based on httpx AsyncClient
-    :param: get_app: FastAPI wsgi application instance
+    :param get_app: FastAPI wsgi application instance
     :return: httpx async client
     """
     async with AsyncClient(app=get_app, base_url="http://testserver") as client:

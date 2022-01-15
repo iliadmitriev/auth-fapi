@@ -26,7 +26,14 @@ router = APIRouter()
     description="Registers new user",
     response_model=UserOut
 )
-async def login_register(register: Register, request: Request):
+async def login_register(register: Register, request: Request) -> User:
+    """
+    view function for creating a new unprivileged user from registration
+    :rtype: User
+    :param register: user data login and password
+    :param request: request instance
+    :return: a newly registered user
+    """
     db = request.app.state.db
     res = await db.execute(select(User).filter(User.email == register.email))
     found_users = res.scalar_one_or_none()
@@ -52,7 +59,7 @@ async def login_register(register: Register, request: Request):
     description="Auth user and get access and refresh tokens",
     response_model=Token
 )
-async def login_auth(auth: Auth, request: Request):
+async def login_auth(auth: Auth, request: Request) -> Token:
     res = await request.app.state.db.execute(select(User).filter(User.email == auth.email))
     db_user = res.scalar()
     if not db_user:
