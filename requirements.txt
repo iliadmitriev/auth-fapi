@@ -1,6 +1,6 @@
 aioredis==2.0.1
 aiosqlite==0.17.0
-alembic==1.7.5
+alembic==1.7.6
 anyio==3.5.0
 asgi-lifespan==1.0.1
 asgiref==3.4.1
