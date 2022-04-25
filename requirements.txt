@@ -35,7 +35,7 @@ pyasn1==0.4.8
 pydantic==1.9.0
 PyMySQL==1.0.2
 pyparsing==3.0.8
-pytest==7.1.1
+pytest==7.1.2
 pytest-asyncio==0.18.3
 pytest-cov==3.0.0
 pytest-cover==3.0.0
