@@ -1,9 +1,0 @@
-[run]
-source = .
-branch = True
-parallel = True
-concurrency = greenlet
-omit =
-	venv/*
-	tests/*
-	alembic/versions/*
