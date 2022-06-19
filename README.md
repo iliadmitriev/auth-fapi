@@ -88,7 +88,7 @@ for postgresql
 ```shell
 cat > .env << _EOF_
 DATABASE_DRIVER=postgresql+asyncpg
-DATABASE_HOST=192.168.10.1
+DATABASE_HOST=localhost
 DATABASE_PORT=5432
 DATABASE_NAME=auth
 DATABASE_USER=auth
@@ -103,7 +103,7 @@ for mysql
 ```shell
 cat > .env << _EOF_
 DATABASE_DRIVER=mysql+asyncmy
-DATABASE_HOST=192.168.10.1
+DATABASE_HOST=localhost
 DATABASE_PORT=3306
 DATABASE_NAME=auth
 DATABASE_USER=auth
@@ -116,8 +116,8 @@ export $(cat .env | xargs)
 add redis url to `.env`
 
 ```shell
-cat > .env << _EOF_
-REDIS_URL=redis://192.168.10.1:6379/0
+cat >> .env << _EOF_
+REDIS_URL=redis://localhost:6379/0
 _EOF_
 
 export $(cat .env | xargs)
