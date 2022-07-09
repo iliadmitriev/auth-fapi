@@ -1,12 +1,27 @@
-from datetime import timedelta, datetime
+"""
+Authentication methods module.
+
+Methods:
+    create_access_token: creates access token string
+"""
+from datetime import datetime, timedelta
 from typing import Optional
 
 from jose import jwt
 
-from config import SECRET_KEY, JWT_ALGORITHM
+from config.auth import JWT_ALGORITHM, SECRET_KEY
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    """Create access token string.
+
+    Args:
+        data: data dict to be added to access token
+        expires_delta: token ttl, expire delta time in seconds
+
+    Returns:
+        string containing JWT token
+    """
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -18,8 +33,12 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 
 
 def decode_token(token: str) -> dict:
-    return jwt.decode(
-        token,
-        SECRET_KEY,
-        algorithms=[JWT_ALGORITHM]
-    )
+    """Decode and verify JWT token.
+
+    Args:
+        token: input token.
+
+    Returns:
+        dict of decoded data (key, value)
+    """
+    return jwt.decode(token, SECRET_KEY, algorithms=[JWT_ALGORITHM])

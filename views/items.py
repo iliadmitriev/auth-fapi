@@ -1,3 +1,6 @@
+"""
+Items views handlers.
+"""
 from typing import List
 
 from fastapi import APIRouter
@@ -13,9 +16,17 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     name="Create new Item",
     description="Creates new item instance with post query",
-    response_model=Item
+    response_model=Item,
 )
 async def create_item(item: Item) -> Item:
+    """Create item handler.
+
+    Args:
+        item: incoming item
+
+    Returns:
+        a created item
+    """
     return item
 
 
@@ -23,8 +34,13 @@ async def create_item(item: Item) -> Item:
     "/items/",
     name="Get items list",
     description="Retrieve items list from, with query",
-    response_model=List[Item]
+    response_model=List[Item],
 )
 async def get_items() -> List[Item]:
+    """Get item handler.
+
+    Returns:
+        Item instance
+    """
     item = Item(name="Orange Juice", price=9.90)
     return [item]

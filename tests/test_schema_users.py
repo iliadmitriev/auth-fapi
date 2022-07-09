@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from schemas import UserBase, UserDB, UserCreate, UserUpdate
+from schemas import UserBase, UserCreate, UserDB, UserUpdate
 
 
 def test_user_base():
@@ -10,10 +10,12 @@ def test_user_base():
     assert user.is_active
     assert not user.is_superuser
     assert not user.confirmed
-    assert user.dict(exclude_unset=True) == {'email': 'test@example.com'}
+    assert user.dict(exclude_unset=True) == {"email": "test@example.com"}
     assert user.dict() == {
-        'email': 'test@example.com', 'is_active': True,
-        'is_superuser': False, 'confirmed': False
+        "email": "test@example.com",
+        "is_active": True,
+        "is_superuser": False,
+        "confirmed": False,
     }
 
 
@@ -22,8 +24,10 @@ def test_user_base_email_empty():
     assert user.email is None
     assert user.dict(exclude_unset=True) == {}
     assert user.dict() == {
-        'email': None, 'is_active': True,
-        'is_superuser': False, 'confirmed': False
+        "email": None,
+        "is_active": True,
+        "is_superuser": False,
+        "confirmed": False,
     }
 
 

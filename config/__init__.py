@@ -1,2 +1,3 @@
-from .connection import *
-from .auth import *
+"""
+Imported application configuration package.
+"""

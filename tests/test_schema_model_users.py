@@ -3,11 +3,7 @@ from schemas import UserCreate
 
 
 def test_user_schema_dump_to_db_without_defaults():
-    user = UserCreate(
-        email="fake@example.com",
-        password="secret",
-        is_superuser=False
-    )
+    user = UserCreate(email="fake@example.com", password="secret", is_superuser=False)
     user_db = User(**user.dict(exclude_unset=True))  # type: ignore
 
     assert user_db.email == "fake@example.com"
@@ -22,11 +18,7 @@ def test_user_schema_dump_to_db_without_defaults():
 
 
 def test_user_schema_dump_to_db_with_defaults():
-    user = UserCreate(
-        email="fake@example.com",
-        password="secret",
-        is_superuser=False
-    )
+    user = UserCreate(email="fake@example.com", password="secret", is_superuser=False)
     user_db = User(**user.dict())  # type: ignore
 
     assert user_db.email == "fake@example.com"

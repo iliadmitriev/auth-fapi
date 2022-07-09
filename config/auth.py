@@ -1,7 +1,9 @@
+"""
+Application configuration file.
+"""
 from os import environ
 
-
-SECRET_KEY = environ.get('SECRET_KEY', 'test secret string for jwt')
+SECRET_KEY = environ.get("SECRET_KEY", "test secret string for jwt")
 
 JWT_ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE = 300
