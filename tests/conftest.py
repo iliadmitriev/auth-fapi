@@ -5,6 +5,7 @@ from unittest import mock
 
 import aioredis
 import pytest
+import pytest_asyncio
 from aioredis import Redis
 from alembic.config import Config
 from alembic.operations import Operations
@@ -90,7 +91,7 @@ def redis_test_url() -> str:
     return "redis://127.0.0.1:6379/0"
 
 
-@pytest.fixture(scope='session')
+@pytest_asyncio.fixture(scope='session')
 async def engine(database_test_url: str) -> AsyncEngine:
     """
     create async engine and run alembic migrations on database
@@ -103,7 +104,7 @@ async def engine(database_test_url: str) -> AsyncEngine:
     await engine.dispose()
 
 
-@pytest.fixture(scope='session')
+@pytest_asyncio.fixture(scope='session')
 async def get_redis(redis_test_url: str) -> Redis:
     """
     create redis test connection pool with url connection string provided
@@ -115,7 +116,7 @@ async def get_redis(redis_test_url: str) -> Redis:
     )
 
 
-@pytest.fixture(scope='session')
+@pytest_asyncio.fixture(scope='session')
 async def get_app(
         engine: AsyncEngine,
         database_test_url: str,
@@ -143,7 +144,7 @@ async def get_app(
                 yield app
 
 
-@pytest.fixture()
+@pytest_asyncio.fixture()
 async def get_client(get_app: FastAPI) -> AsyncClient:
     # noinspection SpellCheckingInspection
     """
@@ -155,7 +156,7 @@ async def get_client(get_app: FastAPI) -> AsyncClient:
         yield client
 
 
-@pytest.fixture(scope='session')
+@pytest_asyncio.fixture(scope='session')
 async def add_some_user(engine: AsyncEngine) -> User:
     """
     add test user to database and return it
