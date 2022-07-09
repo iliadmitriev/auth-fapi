@@ -47,7 +47,7 @@ for postgresql as database
 
 ```shell
 # setup db, user and password
-cat > .env_postgres << _EOF_
+cat > .postgres.env << _EOF_
 POSTGRES_DB=auth
 POSTGRES_USER=auth
 POSTGRES_PASSWORD=authsecret
@@ -55,14 +55,14 @@ _EOF_
 
 # create docker instance of postgresql
 docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
-    -p 5432:5432 --env-file .env_postgres postgres:14-alpine
+    -p 5432:5432 --env-file .postgres.env postgres:alpine
 ```
 
 for mysql as database
 
 ```shell
 # setup db, user and password
-cat > .env_mysql << _EOF
+cat > .mysql.env << _EOF
 MYSQL_ROOT_PASSWORD=rootsecret
 MYSQL_DATABASE=auth
 MYSQL_USER=auth
@@ -71,14 +71,14 @@ _EOF
 
 # create docker instance of mariadb
 docker run -d --name auth-fapi-mariadb --hostname auth-fapi-mariadb \
-              --env-file .env_mysql -p 3306:3306 mariadb
+              --env-file .mysql.env -p 3306:3306 mariadb
 ```
 
 5. Create redis instance
 
 ```shell
 docker run -d --name auth-fapi-redis --hostname auth-fapi-redis \
-              -p 6379:6379 redis:6.2-alpine
+              -p 6379:6379 redis:alpine
 ```
 
 6. configure application environment variables
@@ -136,7 +136,7 @@ Tests located in `tests` directory and based on pytest and using `requests` libr
 ## Install pytest
 
 ```shell
-pip install pytest requests
+pip install -r requirements-dev.txt
 ```
 
 ## run tests
@@ -195,7 +195,7 @@ setup db environment and run db container
 
 ```shell
 # setup db, user and password
-cat > .env_postgres << _EOF_
+cat > .postgres.env << _EOF_
 POSTGRES_DB=auth
 POSTGRES_USER=auth
 POSTGRES_PASSWORD=authsecret
@@ -203,7 +203,7 @@ _EOF_
 
 # create docker instance of postgresql
 docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
-    -p 5432:5432 --env-file .env_postgres postgres:13.4-alpine3.14
+    -p 5432:5432 --env-file .postgres.env postgres:13.4-alpine3.14
 ```
 
 setup environment for application container 
