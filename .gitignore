@@ -128,6 +128,7 @@ venv.bak/
 
 # mkdocs documentation
 /site
+/docs
 
 # mypy
 .mypy_cache/
@@ -142,3 +143,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# files from system
+.DS_Store
