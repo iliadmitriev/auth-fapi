@@ -16,6 +16,7 @@ This program is for educational purposes. It's created using FastAPI and pydanti
   * [run tests with coverage](#run-tests-with-coverage)
   * [run tests with coverage and check 100%](#run-tests-with-coverage-and-check-100-)
   * [Coverage HTML report](#coverage-html-report)
+  * [Update dependencies](#update-dependencies)
 - [Start Application](#start-application)
   * [Start with hot reload](#start-with-hot-reload)
 - [Docker](#docker)
@@ -171,6 +172,21 @@ pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100 --cov-report=ht
 
 # open report
 open htmlcov/index.html 
+```
+
+## Update dependencies
+
+Update runtime `requirements.txt` and develop `requirements-dev.txt` dependencies using poetry.
+
+```shell
+# install poetry
+pip3 install poetry
+
+# generate runtime dependencies
+poetry export --without-hashes -o requirements.txt 
+
+# genegate develop dependencies
+poetry export --dev --without-hashes -o requirements-dev.txt
 ```
 
 # Start Application
