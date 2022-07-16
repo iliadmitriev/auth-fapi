@@ -559,7 +559,7 @@ markdown = ">=3.0"
 
 [[package]]
 name = "pep8-naming"
-version = "0.13.0"
+version = "0.13.1"
 description = "Check PEP-8 naming conventions, plugin for flake8"
 category = "dev"
 optional = false
@@ -903,7 +903,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4.0"
-content-hash = "f018f3c695c8bf4287ba7b6eb33ce3374d6ffe4e73889007a24d7942997f775f"
+content-hash = "08c172a0f04510a0f4a29e258440aa577c12fd599981857fd2020863a8c582ec"
 
 [metadata.files]
 aioredis = [
@@ -1267,8 +1267,8 @@ pdoc3 = [
     {file = "pdoc3-0.10.0.tar.gz", hash = "sha256:5f22e7bcb969006738e1aa4219c75a32f34c2d62d46dc9d2fb2d3e0b0287e4b7"},
 ]
 pep8-naming = [
-    {file = "pep8-naming-0.13.0.tar.gz", hash = "sha256:9f38e6dcf867a1fb7ad47f5ff72c0ddae544a6cf64eb9f7600b7b3c0bb5980b5"},
-    {file = "pep8_naming-0.13.0-py3-none-any.whl", hash = "sha256:069ea20e97f073b3e6d4f789af2a57816f281ca64b86210c7d471117a4b6bfd0"},
+    {file = "pep8-naming-0.13.1.tar.gz", hash = "sha256:3af77cdaa9c7965f7c85a56cd579354553c9bbd3fdf3078a776f12db54dd6944"},
+    {file = "pep8_naming-0.13.1-py3-none-any.whl", hash = "sha256:f7867c1a464fe769be4f972ef7b79d6df1d9aff1b1f04ecf738d471963d3ab9c"},
 ]
 platformdirs = [
     {file = "platformdirs-2.5.2-py3-none-any.whl", hash = "sha256:027d8e83a2d7de06bbac4e5ef7e023c02b863d7ea5d079477e722bb41ab25788"},
