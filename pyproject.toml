@@ -16,7 +16,7 @@ SQLAlchemy = "^1.4.40"
 uvicorn = "^0.18.2"
 alembic = "^1.8.1"
 greenlet = "^1.1.2"
-pydantic = {extras = ["email"], version = "^1.9.1"}
+pydantic = {extras = ["email"], version = "^1.9.2"}
 passlib = "^1.7.4"
 python-jose = "^3.3.0"
 
