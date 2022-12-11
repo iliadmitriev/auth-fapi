@@ -256,3 +256,4 @@ docker run -d -p 8000:8000 --name auth-fapi --hostname auth-fapi \
 
 1. Swagger Documentation http://127.0.0.1:8000/docs
 2. ReDoc http://127.0.0.1:8000/redoc
+
