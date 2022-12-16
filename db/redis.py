@@ -3,9 +3,9 @@ Redis module.
 """
 from typing import Optional
 
-import aioredis
-from aioredis import Redis
 from fastapi import FastAPI
+import redis.asyncio as redis
+from redis.asyncio.client import Redis
 
 from config.connection import REDIS_URL
 
@@ -19,7 +19,7 @@ async def app_init_redis(app: FastAPI) -> None:
     Returns:
         None
     """
-    app.state.redis = aioredis.from_url(
+    app.state.redis = redis.from_url(
         REDIS_URL
     )
 
