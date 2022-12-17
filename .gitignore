@@ -146,3 +146,5 @@ cython_debug/
 
 # files from system
 .DS_Store
+
+/.obsidian
