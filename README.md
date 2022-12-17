@@ -24,6 +24,7 @@ This program is for educational purposes. It's created using FastAPI and pydanti
   * [Run docker container](#run-docker-container)
 - [Usage](#usage)
   * [API documentation](#api-documentation)
+- [Develop](develop.md)
 
 # Install
 
