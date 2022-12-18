@@ -19,11 +19,15 @@ erDiagram
 
 ```mermaid
 sequenceDiagram
-    Frontend->>API: auth
-    API->>DB: email
-    DB->>API: user
-    API-->API: verify password
-    API->>Frontend: token
+    participant Frontend
+    participant API
+    participant DB
+
+    Frontend->>+API: auth
+    API->>+DB: email
+    DB-->>-API: user
+    API-->>API: verify password
+    API-->>-Frontend: token
 ```
 
 ### Class Auth
