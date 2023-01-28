@@ -7,7 +7,6 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.7,<4.0"
-aioredis = "^2.0.1"
 aiosqlite = "^0.18.0"
 asyncmy = "^0.2.5"
 asyncpg = "^0.27.0"
@@ -19,6 +18,7 @@ greenlet = "^2.0.1"
 pydantic = {extras = ["email"], version = "^1.10.4"}
 passlib = "^1.7.4"
 python-jose = "^3.3.0"
+redis = "^4.4.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.2.1"

@@ -16,10 +16,10 @@ from asyncio import AbstractEventLoop
 from typing import List
 from unittest import mock
 
-import aioredis
+import redis.asyncio as redis
+from redis.asyncio.client import Redis
 import pytest
 import pytest_asyncio
-from aioredis import Redis
 from alembic.runtime.migration import RevisionStep, MigrationContext
 from asgi_lifespan import LifespanManager
 from fastapi import FastAPI
@@ -173,7 +173,7 @@ async def get_redis(redis_test_url: str) -> Redis:
     Returns:
         Redis instance
     """
-    return aioredis.from_url(redis_test_url)
+    return redis.from_url(redis_test_url)
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -197,7 +197,7 @@ async def get_app(
     connection.REDIS_URL = redis_test_url
     with mock.patch("sqlalchemy.ext.asyncio.create_async_engine") as create_eng:
         # noinspection SpellCheckingInspection
-        with mock.patch("aioredis.from_url") as create_redis:
+        with mock.patch("db.redis.redis.from_url") as create_redis:
             create_redis.return_value = get_redis
             create_eng.return_value = engine
             from main import app

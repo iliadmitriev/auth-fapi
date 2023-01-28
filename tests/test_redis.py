@@ -11,7 +11,7 @@ from db.redis import app_dispose_redis, app_init_redis, get_redis_key, set_redis
 async def test_init_redis():
     app = mock.MagicMock()
     from_url_mock = mock.Mock(return_value="test redis server")
-    with mock.patch("aioredis.from_url", from_url_mock):
+    with mock.patch("db.redis.redis.from_url", from_url_mock):
         await app_init_redis(app)
 
     assert app.state.redis == "test redis server"
