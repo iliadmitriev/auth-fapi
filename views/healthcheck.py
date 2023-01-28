@@ -4,6 +4,7 @@ Healthcheck views module.
 import uuid
 
 from fastapi import APIRouter, HTTPException
+from sqlalchemy import text
 from sqlalchemy.exc import InterfaceError
 from starlette import status
 from starlette.requests import Request
@@ -32,7 +33,7 @@ async def health_check(request: Request) -> dict:
     db = request.app.state.db
     redis = request.app.state.redis
     try:
-        res = await db.execute("select 1")
+        res = await db.execute(text("select 1"))
         one = res.scalar()
         assert str(one) == "1"
         await get_redis_key(redis, uuid.uuid4().hex)
