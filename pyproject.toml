@@ -12,7 +12,7 @@ asyncmy = "^0.2.7"
 asyncpg = "^0.27.0"
 fastapi = "^0.92.0"
 SQLAlchemy = "^2.0.5"
-uvicorn = "^0.20.0"
+uvicorn = "^0.21.0"
 alembic = "^1.10.2"
 greenlet = "^2.0.2"
 pydantic = {extras = ["email"], version = "^1.10.6"}
