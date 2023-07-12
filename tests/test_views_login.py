@@ -19,8 +19,9 @@ async def test_login_register_success(get_client, get_app):
     email = f"{uuid.uuid4().hex}@example.com"
     password = uuid.uuid4().hex
     register = Register(email=email, password=password)
+    data = register.model_dump_json()
     res = await get_client.post(
-        get_app.url_path_for("login:register"), content=register.json()
+        get_app.url_path_for("login:register"), content=data
     )
     assert res.status_code == status.HTTP_200_OK
     db = get_app.state.db

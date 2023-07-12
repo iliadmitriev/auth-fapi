@@ -47,7 +47,7 @@ async def login_register(register: Register, request: Request) -> User:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"User with email '{register.email}' already exists",
         )
-    user = UserCreate.parse_obj(register)
+    user = UserCreate.model_validate(register.model_dump())
     user.password = password_hash_ctx.hash(register.password)
     user_db = User(**user.dict())
     db.add(user_db)

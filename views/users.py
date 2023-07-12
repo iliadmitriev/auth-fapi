@@ -169,9 +169,9 @@ async def update_user_field(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User with id '{user_id}' not found",
         )
-    for var, value in user.dict(**kwargs).items():
+    for var, value in user.model_dump(**kwargs).items():
         setattr(found_user, var, value)
-    if user.dict(exclude_none=True).get("password") is not None:
+    if user.model_dump(exclude_none=True).get("password") is not None:
         found_user.password = password_hash_ctx.hash(user.password)
     db.add(found_user)
     await db.commit()

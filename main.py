@@ -68,4 +68,4 @@ app.include_router(welcome.router)
 app.include_router(healthcheck.router, tags=["status"])
 
 if __name__ == "__main__":  # pragma: no cover
-    uvicorn.run(app, host="0.0.0.0", port=8000)  # type: ignore
+    uvicorn.run(app, host="0.0.0.0", port=8000)
