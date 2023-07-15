@@ -19,9 +19,7 @@ async def app_init_redis(app: FastAPI) -> None:
     Returns:
         None
     """
-    app.state.redis = redis.from_url(
-        REDIS_URL
-    )
+    app.state.redis = redis.from_url(REDIS_URL)
 
 
 async def app_dispose_redis(app: FastAPI) -> None:
@@ -52,8 +50,7 @@ async def get_redis_key(redis: Redis, key: str) -> Optional[str]:
 
 
 async def set_redis_key(
-        redis: Redis, key: str, value: str,
-        expire: Optional[int] = None
+    redis: Redis, key: str, value: str, expire: Optional[int] = None
 ) -> bool:
     """Set redis key with expiration.
 

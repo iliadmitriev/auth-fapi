@@ -18,12 +18,10 @@ async def app_init_db(app: FastAPI) -> None:
         None
     """
     engine = create_async_engine(
-        url=DATABASE_URL, echo=False,
-        pool_size=50, pool_pre_ping=True
+        url=DATABASE_URL, echo=False, pool_size=50, pool_pre_ping=True
     )
     async_session = sessionmaker(
-        engine, expire_on_commit=False,
-        autoflush=False, class_=AsyncSession
+        engine, expire_on_commit=False, autoflush=False, class_=AsyncSession
     )
     session = async_session(bind=engine)
     app.state.db = session

@@ -49,7 +49,7 @@ async def login_register(register: Register, request: Request) -> User:
         )
     user = UserCreate.model_validate(register.model_dump())
     user.password = password_hash_ctx.hash(register.password)
-    user_db = User(**user.dict())
+    user_db = User(**user.model_dump())
     db.add(user_db)
     await db.commit()
     await db.refresh(user_db)

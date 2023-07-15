@@ -24,7 +24,7 @@ router = APIRouter()
     response_model=List[UserOut],
 )
 async def user_get_list(
-        request: Request, skip: int = 0, limit: int = 50
+    request: Request, skip: int = 0, limit: int = 50
 ) -> List[tuple]:
     """Get user list of users request handler.
 
@@ -68,7 +68,7 @@ async def user_post(user: UserCreate, request: Request) -> Optional[User]:
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"User with email '{user.email}' already exists",
         )
-    user_db = User(**user.dict())
+    user_db = User(**user.model_dump())
     user_db.password = password_hash_ctx.hash(user_db.password)
     db.add(user_db)
     await db.commit()
@@ -92,7 +92,9 @@ async def user_get_by_id(user_id: int, request: Request) -> Optional[UserDB]:
     Returns:
         user from db, or None of not found
     """
-    res = await request.app.state.db.execute(select(User).filter(User.id == user_id))
+    res = await request.app.state.db.execute(
+        select(User).filter(User.id == user_id)
+    )
     db_user = res.scalar()
     if not db_user:
         raise HTTPException(
@@ -108,7 +110,7 @@ async def user_get_by_id(user_id: int, request: Request) -> Optional[UserDB]:
     response_model=UserDB,
 )
 async def user_put(
-        user_id: int, user: UserUpdate, request: Request
+    user_id: int, user: UserUpdate, request: Request
 ) -> Optional[UserDB]:
     """Update user in db request handler.
 
@@ -120,7 +122,9 @@ async def user_put(
     Returns:
         updated user from DB
     """
-    found_user = await update_user_field(request, user, user_id, exclude_none=True)
+    found_user = await update_user_field(
+        request, user, user_id, exclude_none=True
+    )
     return found_user
 
 
@@ -131,7 +135,7 @@ async def user_put(
     response_model=UserDB,
 )
 async def user_patch(
-        user_id: int, user: UserUpdate, request: Request
+    user_id: int, user: UserUpdate, request: Request
 ) -> Optional[UserDB]:
     """Partial patch user in db request handler.
 
@@ -143,12 +147,14 @@ async def user_patch(
     Returns:
         updated user from DB
     """
-    found_user = await update_user_field(request, user, user_id, exclude_unset=True)
+    found_user = await update_user_field(
+        request, user, user_id, exclude_unset=True
+    )
     return found_user
 
 
 async def update_user_field(
-        request: Request, user: UserUpdate, user_id: int, **kwargs
+    request: Request, user: UserUpdate, user_id: int, **kwargs
 ) -> Optional[UserDB]:
     """Update user in db.
 

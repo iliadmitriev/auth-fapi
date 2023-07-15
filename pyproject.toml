@@ -59,7 +59,7 @@ per-file-ignores = [
     "test_*.py: S101, DAR101, D100",
     "*/models/*: N815"
 ]
-max-line-length = 88
+max-line-length = 80
 exclude = [
     "manage.py",
     "*migrations*",
@@ -100,3 +100,7 @@ omit = [
 [tool.coverage.report]
 fail_under = 100
 show_missing = true
+
+[tool.black]
+line-length = 80
+experimental-string-processing = true

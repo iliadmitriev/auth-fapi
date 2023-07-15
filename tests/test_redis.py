@@ -4,7 +4,12 @@ from unittest import mock
 
 import pytest
 
-from db.redis import app_dispose_redis, app_init_redis, get_redis_key, set_redis_key
+from db.redis import (
+    app_dispose_redis,
+    app_init_redis,
+    get_redis_key,
+    set_redis_key,
+)
 
 
 @pytest.mark.asyncio
@@ -46,7 +51,9 @@ async def test_dispose_redis():
     app.state.redis.close.assert_called_once()
 
 
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python3.8 or higher")
+@pytest.mark.skipif(
+    sys.version_info < (3, 8), reason="requires python3.8 or higher"
+)
 @pytest.mark.asyncio
 async def test_set_redis_key():
     redis = mock.MagicMock()
@@ -58,7 +65,9 @@ async def test_set_redis_key():
     assert res
 
 
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python3.8 or higher")
+@pytest.mark.skipif(
+    sys.version_info < (3, 8), reason="requires python3.8 or higher"
+)
 @pytest.mark.asyncio
 async def test_set_redis_key_with_expire():
     redis = mock.MagicMock()
@@ -72,7 +81,9 @@ async def test_set_redis_key_with_expire():
     assert res
 
 
-@pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python3.8 or higher")
+@pytest.mark.skipif(
+    sys.version_info < (3, 8), reason="requires python3.8 or higher"
+)
 @pytest.mark.asyncio
 async def test_get_redis_key():
     redis = mock.MagicMock()
@@ -98,7 +109,8 @@ class AMagicMock(mock.MagicMock):
 
 
 @pytest.mark.skipif(
-    sys.version_info > (3, 8) or sys.version_info <= (3, 7), reason="requires python3.7"
+    sys.version_info > (3, 8) or sys.version_info <= (3, 7),
+    reason="requires python3.7",
 )
 @pytest.mark.asyncio
 async def test_set_redis_key_py_3_7():
@@ -109,7 +121,8 @@ async def test_set_redis_key_py_3_7():
 
 
 @pytest.mark.skipif(
-    sys.version_info > (3, 8) or sys.version_info <= (3, 7), reason="requires python3.7"
+    sys.version_info > (3, 8) or sys.version_info <= (3, 7),
+    reason="requires python3.7",
 )
 @pytest.mark.asyncio
 async def test_set_redis_key_with_expire_py_3_7():
@@ -122,7 +135,8 @@ async def test_set_redis_key_with_expire_py_3_7():
 
 
 @pytest.mark.skipif(
-    sys.version_info > (3, 8) or sys.version_info <= (3, 7), reason="requires python3.7"
+    sys.version_info > (3, 8) or sys.version_info <= (3, 7),
+    reason="requires python3.7",
 )
 @pytest.mark.asyncio
 async def test_set_redis_key_without_expire_py_3_7():
