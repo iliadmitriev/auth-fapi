@@ -8,20 +8,23 @@ from db.database import app_dispose_db, app_init_db
 from db.redis import app_dispose_redis, app_init_redis
 from views import healthcheck, items, login, users, welcome
 
-description = """
+DESCRIPTION = """
 **API with HTTP Bearer authorization using JWT token**
 """
+
 
 openapi_tags = [
     {
         "name": "login",
-        "description":
-            "operations for users to register, login, logout or refresh token",
+        "description": (
+            "operations for users to register, login, logout or refresh token"
+        ),
     },
     {
         "name": "users",
-        "description":
-            "admin operations with users accounts: find, create, update, delete",
+        "description": (
+            "admin operations with users accounts: find, create, update, delete"
+        ),
         "externalDocs": {
             "description": "Read more",
             "url": "https://iliadmitriev.github.io/auth-fapi/",
@@ -33,7 +36,7 @@ openapi_tags = [
 app = FastAPI(
     title="Auth-fAPI",
     version="0.0.1",
-    description=description,
+    description=DESCRIPTION,
     openapi_tags=openapi_tags,
     contact={
         "name": "Ilia Dmitriev",

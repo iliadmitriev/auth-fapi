@@ -18,8 +18,10 @@ router = APIRouter()
     "/health",
     name="health-check",
     summary="check application health status",
-    description="checks connection with database"
-                " performing simple query and responds if it's OK",
+    description=(
+        "checks connection with database"
+        " performing simple query and responds if it's OK"
+    ),
 )
 async def health_check(request: Request) -> dict:
     """Check connection to databases.
@@ -40,5 +42,6 @@ async def health_check(request: Request) -> dict:
         return {"detail": "OK"}
     except (ConnectionRefusedError, InterfaceError, ConnectionError):
         raise HTTPException(
-            detail="connection failed", status_code=status.HTTP_503_SERVICE_UNAVAILABLE
+            detail="connection failed",
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
         )

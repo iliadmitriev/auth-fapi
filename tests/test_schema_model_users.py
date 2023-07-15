@@ -1,10 +1,16 @@
+"""
+Test user schemas.
+"""
 from models import User
 from schemas import UserCreate
 
 
 def test_user_schema_dump_to_db_without_defaults():
-    user = UserCreate(email="fake@example.com", password="secret", is_superuser=False)
-    user_db = User(**user.dict(exclude_unset=True))  # type: ignore
+    """Test user validation and schema conversion to db object."""
+    user = UserCreate(
+        email="fake@example.com", password="secret", is_superuser=False
+    )
+    user_db = User(**user.model_dump(exclude_unset=True))  # type: ignore
 
     assert user_db.email == "fake@example.com"
     assert user_db.password == "secret"
@@ -18,8 +24,11 @@ def test_user_schema_dump_to_db_without_defaults():
 
 
 def test_user_schema_dump_to_db_with_defaults():
-    user = UserCreate(email="fake@example.com", password="secret", is_superuser=False)
-    user_db = User(**user.dict())  # type: ignore
+    """Test user schema validation with default values."""
+    user = UserCreate(
+        email="fake@example.com", password="secret", is_superuser=False
+    )
+    user_db = User(**user.model_dump())  # type: ignore
 
     assert user_db.email == "fake@example.com"
     assert user_db.password == "secret"

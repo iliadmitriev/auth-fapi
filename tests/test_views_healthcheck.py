@@ -19,7 +19,9 @@ async def test_view_health_check_200_ok(get_client, get_app):
 
 @pytest.mark.asyncio
 async def test_view_health_check_503_unavailable(get_client, get_app):
-    with mock.patch("sqlalchemy.ext.asyncio.AsyncSession.execute") as session_execute:
+    with mock.patch(
+        "sqlalchemy.ext.asyncio.AsyncSession.execute"
+    ) as session_execute:
         session_execute.side_effect = ConnectionRefusedError()
         res = await get_client.get(get_app.url_path_for("health-check"))
         assert res.status_code == status.HTTP_503_SERVICE_UNAVAILABLE

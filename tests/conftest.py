@@ -24,7 +24,11 @@ from alembic.runtime.migration import RevisionStep, MigrationContext
 from asgi_lifespan import LifespanManager
 from fastapi import FastAPI
 from httpx import AsyncClient
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    create_async_engine,
+)
 from sqlalchemy.future import Connection
 from sqlalchemy.orm import sessionmaker
 
@@ -42,7 +46,9 @@ sys.path.append(str(BASE_PATH))
 @pytest.fixture
 def item() -> Item:
     """Fixture creates test item object."""
-    return Item(name="Banana", price=2.99, tax=0.25, description="One pound of banana")
+    return Item(
+        name="Banana", price=2.99, tax=0.25, description="One pound of banana"
+    )
 
 
 def do_upgrade(revision: str, context: MigrationContext) -> List[RevisionStep]:
@@ -56,10 +62,14 @@ def do_upgrade(revision: str, context: MigrationContext) -> List[RevisionStep]:
         (List[RevisionStep])
     """
     alembic_script = context.script
-    return alembic_script._upgrade_revs(alembic_script.get_heads(), revision)  # noqa
+    return alembic_script._upgrade_revs(
+        alembic_script.get_heads(), revision
+    )  # noqa
 
 
-def do_run_migrations(connection: Connection, alembic_env: EnvironmentContext) -> None:
+def do_run_migrations(
+    connection: Connection, alembic_env: EnvironmentContext
+) -> None:
     """Run migrations.
 
     Args:
@@ -82,7 +92,9 @@ def do_run_migrations(connection: Connection, alembic_env: EnvironmentContext) -
             migration_context.run_migrations()
 
 
-async def async_migrate(engine: AsyncEngine, alembic_env: EnvironmentContext) -> None:
+async def async_migrate(
+    engine: AsyncEngine, alembic_env: EnvironmentContext
+) -> None:
     """Apply all migrations.
 
     Args:
@@ -178,7 +190,10 @@ async def get_redis(redis_test_url: str) -> Redis:
 
 @pytest_asyncio.fixture(scope="session")
 async def get_app(
-    engine: AsyncEngine, database_test_url: str, get_redis: Redis, redis_test_url: str
+    engine: AsyncEngine,
+    database_test_url: str,
+    get_redis: Redis,
+    redis_test_url: str,
 ) -> FastAPI:
     """Create FastApi test application with initialized database.
 

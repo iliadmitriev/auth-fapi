@@ -12,7 +12,9 @@ from jose import jwt
 from config.auth import JWT_ALGORITHM, SECRET_KEY
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(
+    data: dict, expires_delta: Optional[timedelta] = None
+) -> str:
     """Create access token string.
 
     Args:
