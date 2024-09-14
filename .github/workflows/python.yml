@@ -41,7 +41,7 @@ jobs:
       run: |
         pytest -v --cov=. --cov-report=term-missing --cov-report=html --cov-branch
     - name: Archive code coverage results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: code-coverage-report
         path: htmlcov
