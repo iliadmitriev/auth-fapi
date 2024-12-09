@@ -18,7 +18,7 @@ greenlet = "^3.1.0"
 pydantic = {version = "^2.10", extras = ["email"]}
 passlib = "^1.7.4"
 python-jose = "^3.3.0"
-redis = "^5.2.0"
+redis = "^5.2.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^8.3.3"
