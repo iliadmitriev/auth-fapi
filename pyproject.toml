@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "auth-fapi"
 version = "0.1.0"
+package-mode = false
 description = "Auth service for educational purposes"
 authors = ["Ilia Dmitriev <ilia.dmitriev@gmail.com>"]
 license = "MIT"
