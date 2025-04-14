@@ -1,6 +1,7 @@
 """
 Pydantic schemas for users.
 """
+
 from datetime import datetime
 from typing import Optional
 

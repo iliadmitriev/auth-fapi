@@ -6,39 +6,41 @@
 
 This program is for educational purposes. It's created using FastAPI and pydantic.
 
-
 - [Auth microservice](#auth-microservice)
 - [Install](#install)
 - [Tests](#tests)
-  * [Install pytest](#install-pytest)
-  * [run tests](#run-tests)
-  * [install coverage](#install-coverage)
-  * [run tests with coverage](#run-tests-with-coverage)
-  * [run tests with coverage and check 100%](#run-tests-with-coverage-and-check-100-)
-  * [Coverage HTML report](#coverage-html-report)
-  * [Update dependencies](#update-dependencies)
+  - [Install pytest](#install-pytest)
+  - [run tests](#run-tests)
+  - [install coverage](#install-coverage)
+  - [run tests with coverage](#run-tests-with-coverage)
+  - [run tests with coverage and check 100%](#run-tests-with-coverage-and-check-100-)
+  - [Coverage HTML report](#coverage-html-report)
+  - [Update dependencies](#update-dependencies)
 - [Start Application](#start-application)
-  * [Start with hot reload](#start-with-hot-reload)
+  - [Start with hot reload](#start-with-hot-reload)
 - [Docker](#docker)
-  * [Build image](#build-image)
-  * [Run docker container](#run-docker-container)
+  - [Build image](#build-image)
+  - [Run docker container](#run-docker-container)
 - [Usage](#usage)
-  * [API documentation](#api-documentation)
+  - [API documentation](#api-documentation)
 - [Develop](develop.md)
 
 # Install
 
 1. Create virtual environment
+
 ```shell
 python3 -m venv venv
 ```
 
 2. Activate virtual environment
+
 ```shell
 source venv/bin/activate
 ```
 
 3. Install pip packages
+
 ```shell
 pip install -r requirements.txt
 ```
@@ -172,7 +174,7 @@ pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100
 pytest -v --cov=. --cov-report=term-missing --cov-fail-under=100 --cov-report=html
 
 # open report
-open htmlcov/index.html 
+open htmlcov/index.html
 ```
 
 ## Update dependencies
@@ -184,7 +186,7 @@ Update runtime `requirements.txt` and develop `requirements-dev.txt` dependencie
 pip3 install poetry
 
 # generate runtime dependencies
-poetry export --without-hashes -o requirements.txt 
+poetry export --without-hashes -o requirements.txt
 
 # genegate develop dependencies
 poetry export --dev --without-hashes -o requirements-dev.txt
@@ -195,7 +197,7 @@ poetry export --dev --without-hashes -o requirements-dev.txt
 ## Start with hot reload
 
 ```shell
-uvicorn main:app --reload 
+uvicorn main:app --reload
 ```
 
 # Docker
@@ -223,7 +225,7 @@ docker run -d --name auth-fapi-postgres --hostname auth-fapi-postgres \
     -p 5432:5432 --env-file .postgres.env postgres:13.4-alpine3.14
 ```
 
-setup environment for application container 
+setup environment for application container
 
 ```shell
 # setup db, user and password
@@ -257,4 +259,3 @@ docker run -d -p 8000:8000 --name auth-fapi --hostname auth-fapi \
 
 1. Swagger Documentation http://127.0.0.1:8000/docs
 2. ReDoc http://127.0.0.1:8000/redoc
-

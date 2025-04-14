@@ -1,6 +1,7 @@
 """
 Login views handlers.
 """
+
 import uuid
 from datetime import timedelta
 
@@ -74,18 +75,12 @@ async def login_auth(auth: Auth, request: Request) -> Token:
     Returns:
         JWT token
     """
-    res = await request.app.state.db.execute(
-        select(User).filter(User.email == auth.email)
-    )
+    res = await request.app.state.db.execute(select(User).filter(User.email == auth.email))
     db_user = res.scalar()
     if not db_user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     if not password_hash_ctx.verify(auth.password, db_user.password):
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     token = {
         "id": db_user.id,
         "email": db_user.email,
@@ -96,15 +91,9 @@ async def login_auth(auth: Auth, request: Request) -> Token:
     access_token = {**token, "token_type": "access_token"}
     refresh_token = {**token, "token_type": "refresh_token"}
     token = Token(
-        access_token=create_access_token(
-            access_token, timedelta(seconds=ACCESS_TOKEN_EXPIRE)
-        ),
-        refresh_token=create_access_token(
-            refresh_token, timedelta(seconds=REFRESH_TOKEN_EXPIRE)
-        ),
+        access_token=create_access_token(access_token, timedelta(seconds=ACCESS_TOKEN_EXPIRE)),
+        refresh_token=create_access_token(refresh_token, timedelta(seconds=REFRESH_TOKEN_EXPIRE)),
     )
-    await set_redis_key(
-        request.app.state.redis, token.refresh_token, "1", REFRESH_TOKEN_EXPIRE
-    )
+    await set_redis_key(request.app.state.redis, token.refresh_token, "1", REFRESH_TOKEN_EXPIRE)
 
     return token

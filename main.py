@@ -1,6 +1,7 @@
 """
 Main start module.
 """
+
 import uvicorn
 from fastapi import FastAPI
 
@@ -16,15 +17,11 @@ DESCRIPTION = """
 openapi_tags = [
     {
         "name": "login",
-        "description": (
-            "operations for users to register, login, logout or refresh token"
-        ),
+        "description": ("operations for users to register, login, logout or refresh token"),
     },
     {
         "name": "users",
-        "description": (
-            "admin operations with users accounts: find, create, update, delete"
-        ),
+        "description": ("admin operations with users accounts: find, create, update, delete"),
         "externalDocs": {
             "description": "Read more",
             "url": "https://iliadmitriev.github.io/auth-fapi/",
