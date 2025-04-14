@@ -1,6 +1,7 @@
 """
 Login schemas.
 """
+
 from pydantic import BaseModel, EmailStr
 
 

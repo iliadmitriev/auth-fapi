@@ -13,11 +13,11 @@ WORKDIR $APP_HOME
 COPY --chown=$USER requirements.txt $APP_HOME/
 
 RUN apk add --no-cache \
-            libpq \
+    libpq \
     && apk add --virtual .build-deps \
-        build-base python3-dev postgresql-dev \
+    build-base python3-dev postgresql-dev \
     && pip install --no-cache-dir \
-        -r requirements.txt \
+    -r requirements.txt \
     && rm -rf /root/.cache/ \
     && chown -R $USER:$USER $APP_HOME \
     && apk del .build-deps

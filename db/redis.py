@@ -1,6 +1,7 @@
 """
 Redis module.
 """
+
 from typing import Optional
 
 from fastapi import FastAPI
@@ -49,9 +50,7 @@ async def get_redis_key(redis: Redis, key: str) -> Optional[str]:
     return val
 
 
-async def set_redis_key(
-    redis: Redis, key: str, value: str, expire: Optional[int] = None
-) -> bool:
+async def set_redis_key(redis: Redis, key: str, value: str, expire: Optional[int] = None) -> bool:
     """Set redis key with expiration.
 
     Args:

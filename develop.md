@@ -45,7 +45,7 @@ classDiagram
         +string access_token
         +string refresh_token
     }
-    
+
 ```
 
 ### Class User

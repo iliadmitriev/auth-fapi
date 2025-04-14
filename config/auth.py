@@ -1,6 +1,7 @@
 """
 Application configuration file.
 """
+
 from os import environ
 
 SECRET_KEY = environ.get("SECRET_KEY", "test secret string for jwt")

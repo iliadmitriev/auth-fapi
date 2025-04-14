@@ -1,6 +1,7 @@
 """
 Declarative base for SQLAlchemy.
 """
+
 from typing import Any
 
 from sqlalchemy.orm import as_declarative, declared_attr

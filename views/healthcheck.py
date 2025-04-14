@@ -1,6 +1,7 @@
 """
 Healthcheck views module.
 """
+
 import uuid
 
 from fastapi import APIRouter, HTTPException
@@ -18,10 +19,7 @@ router = APIRouter()
     "/health",
     name="health-check",
     summary="check application health status",
-    description=(
-        "checks connection with database"
-        " performing simple query and responds if it's OK"
-    ),
+    description=("checks connection with database performing simple query and responds if it's OK"),
 )
 async def health_check(request: Request) -> dict:
     """Check connection to databases.

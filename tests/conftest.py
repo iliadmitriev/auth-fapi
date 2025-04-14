@@ -9,21 +9,21 @@ Args:
     - get_client (a http client to work with application)
     - event_loop (event loop session override)
 """
+
 import asyncio
 import pathlib
 import sys
 from asyncio import AbstractEventLoop
-from typing import List
+from typing import AsyncGenerator, List
 from unittest import mock
 
-import redis.asyncio as redis
-from redis.asyncio.client import Redis
 import pytest
 import pytest_asyncio
-from alembic.runtime.migration import RevisionStep, MigrationContext
+import redis.asyncio as redis
 from asgi_lifespan import LifespanManager
 from fastapi import FastAPI
-from httpx import AsyncClient
+from httpx import ASGITransport, AsyncClient
+from redis.asyncio.client import Redis
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -35,6 +35,7 @@ from sqlalchemy.orm import sessionmaker
 from alembic.config import Config
 from alembic.operations import Operations
 from alembic.runtime.environment import EnvironmentContext
+from alembic.runtime.migration import MigrationContext, RevisionStep
 from alembic.script import ScriptDirectory
 from models import Base, User
 from schemas.items import Item
@@ -46,9 +47,7 @@ sys.path.append(str(BASE_PATH))
 @pytest.fixture
 def item() -> Item:
     """Fixture creates test item object."""
-    return Item(
-        name="Banana", price=2.99, tax=0.25, description="One pound of banana"
-    )
+    return Item(name="Banana", price=2.99, tax=0.25, description="One pound of banana")
 
 
 def do_upgrade(revision: str, context: MigrationContext) -> List[RevisionStep]:
@@ -62,14 +61,10 @@ def do_upgrade(revision: str, context: MigrationContext) -> List[RevisionStep]:
         (List[RevisionStep])
     """
     alembic_script = context.script
-    return alembic_script._upgrade_revs(
-        alembic_script.get_heads(), revision
-    )  # noqa
+    return alembic_script._upgrade_revs(alembic_script.get_heads(), revision)  # noqa
 
 
-def do_run_migrations(
-    connection: Connection, alembic_env: EnvironmentContext
-) -> None:
+def do_run_migrations(connection: Connection, alembic_env: EnvironmentContext) -> None:
     """Run migrations.
 
     Args:
@@ -92,9 +87,7 @@ def do_run_migrations(
             migration_context.run_migrations()
 
 
-async def async_migrate(
-    engine: AsyncEngine, alembic_env: EnvironmentContext
-) -> None:
+async def async_migrate(engine: AsyncEngine, alembic_env: EnvironmentContext) -> None:
     """Apply all migrations.
 
     Args:
@@ -162,7 +155,7 @@ def redis_test_url() -> str:
 
 
 @pytest_asyncio.fixture(scope="session")
-async def engine(database_test_url: str) -> AsyncEngine:
+async def engine(database_test_url: str) -> AsyncGenerator[AsyncEngine, None]:
     """Create async engine and run alembic migrations on database.
 
     Returns:
@@ -194,7 +187,7 @@ async def get_app(
     database_test_url: str,
     get_redis: Redis,
     redis_test_url: str,
-) -> FastAPI:
+) -> AsyncGenerator[FastAPI, None]:
     """Create FastApi test application with initialized database.
 
     Args:
@@ -222,7 +215,7 @@ async def get_app(
 
 
 @pytest_asyncio.fixture()
-async def get_client(get_app: FastAPI) -> AsyncClient:
+async def get_client(get_app: FastAPI) -> AsyncGenerator[AsyncClient, None]:
     # noinspection SpellCheckingInspection
     """Create a custom async http client based on httpx AsyncClient.
 
@@ -232,12 +225,12 @@ async def get_client(get_app: FastAPI) -> AsyncClient:
     Returns:
         httpx async client
     """
-    async with AsyncClient(app=get_app, base_url="http://testserver") as client:
+    async with AsyncClient(transport=ASGITransport(app=get_app), base_url="http://testserver") as client:
         yield client
 
 
 @pytest_asyncio.fixture(scope="session")
-async def add_some_user(engine: AsyncEngine) -> User:
+async def add_some_user(engine: AsyncEngine) -> AsyncGenerator[User, None]:
     """Add test user to database and return it.
 
     Args:
@@ -246,13 +239,9 @@ async def add_some_user(engine: AsyncEngine) -> User:
     Returns:
         a model.User instance
     """
-    async_session = sessionmaker(
-        engine, expire_on_commit=False, autoflush=False, class_=AsyncSession
-    )
+    async_session = sessionmaker(engine, expire_on_commit=False, autoflush=False, class_=AsyncSession)
 
-    user_db = User(
-        email="myuserwithid@example.com", password="password", is_active=True
-    )
+    user_db = User(email="myuserwithid@example.com", password="password", is_active=True)
     async with async_session(bind=engine) as session:
         # add user
         session.add(user_db)

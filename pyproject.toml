@@ -1,96 +1,50 @@
-[tool.poetry]
+[project]
 name = "auth-fapi"
 version = "0.1.0"
-package-mode = false
 description = "Auth service for educational purposes"
-authors = ["Ilia Dmitriev <ilia.dmitriev@gmail.com>"]
-license = "MIT"
+authors = [{ name = "Ilia Dmitriev", email = "ilia.dmitriev@gmail.com" }]
+requires-python = ">=3.9"
+dependencies = [
+    "aiosqlite>=0.21.0",
+    "alembic>=1.15.1",
+    "asyncmy>=0.2.9",
+    "asyncpg>=0.30.0",
+    "fastapi>=0.115.12",
+    "greenlet>=3.1.0",
+    "passlib>=1.7.4",
+    "pydantic[email]>=2.10",
+    "python-jose>=3.4.0",
+    "redis>=5.2.0",
+    "sqlalchemy>=2.0.39",
+    "uvicorn>=0.34.0",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.9,<4.0"
-aiosqlite = "^0.21.0"
-asyncmy = "^0.2.9"
-asyncpg = "^0.30.0"
-fastapi = "^0.115.12"
-SQLAlchemy = "^2.0.39"
-uvicorn = "^0.34.0"
-alembic = "^1.15.1"
-greenlet = "^3.1.0"
-pydantic = { version = "^2.10", extras = ["email"] }
-passlib = "^1.7.4"
-python-jose = "^3.4.0"
-redis = "^5.2.0"
+[dependency-groups]
+dev = [
+    "asgi-lifespan>=2.1.0",
+    "httpx>=0.27.2",
+    "pdoc3>=0.11.6",
+    "pre-commit>=4.2.0",
+    "pre-commit-hooks>=5.0.0",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+    "pytest-cov>=6.0.0",
+    "ruff>=0.11.5",
+]
 
-
-[tool.poetry.group.dev.dependencies]
-flake8-pyproject = "^1.2.3"
-flake8 = "^7.1.2"
-pytest = "^8.3.5"
-pytest-asyncio = "^0.26.0"
-pytest-cov = "^6.0.0"
-asgi-lifespan = "^2.1.0"
-httpx = "^0.27.2"
-flake8-isort = "^6.1.2"
-flake8-quotes = "^3.4.0"
-flake8-docstrings = "^1.7.0"
-flake8-annotations = "^3.1.1"
-flake8-comprehensions = "^3.16.0"
-black = "^25.1.0"
-flake8-polyfill = "^1.0.2"
-pep8-naming = "^0.14.1"
-pdoc3 = "^0.11.6"
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.ruff]
+line-length = 120
+exclude = [
+    ".git",
+    "venv",
+    "alembic",
+    ".venv",
+]
 
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 addopts = "-rx -rP -v"
-
-
-[tool.flake8]
-ignore = [
-    "D200",
-    "D107",
-    "I001",
-    "I005",
-    "ANN002",
-    "ANN003",
-    "ANN101",
-    "ANN401",
-]
-per-file-ignores = [
-    "test_*.py: S101, DAR101, D100",
-    "__init__.py: F401",
-    "test_*.py: S101, DAR101, D100",
-    "*/models/*: N815",
-]
-max-line-length = 80
-exclude = [
-    "manage.py",
-    "*migrations*",
-    "*/tests.py",
-    ".git",
-    "__pycache__",
-    "docs",
-    "old",
-    "build",
-    "dist",
-    ".eggs/*",
-    "*venv*/*",
-    "*/tests/*",
-    "*/test_utils/*",
-    "*/test_*.py",
-    "alembic/*",
-]
-inline-quotes = "\""
-statistics = true
-count = true
-
-
-[tool.isort]
-profile = "black"
 
 
 [tool.coverage.run]
@@ -103,7 +57,3 @@ omit = ["venv/*", "tests/*", "alembic/versions/*"]
 [tool.coverage.report]
 fail_under = 100
 show_missing = true
-
-[tool.black]
-line-length = 80
-experimental-string-processing = true

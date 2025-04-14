@@ -51,47 +51,33 @@ async def test_dispose_redis():
     app.state.redis.close.assert_called_once()
 
 
-@pytest.mark.skipif(
-    sys.version_info < (3, 8), reason="requires python3.8 or higher"
-)
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python3.8 or higher")
 @pytest.mark.asyncio
 async def test_set_redis_key():
     redis = mock.MagicMock()
     redis.client.return_value.__aenter__.return_value.set.return_value = True
     res = await set_redis_key(redis=redis, key="test key", value="test value")
-    redis.client.return_value.__aenter__.return_value.set.assert_called_once_with(
-        "test key", "test value"
-    )
+    redis.client.return_value.__aenter__.return_value.set.assert_called_once_with("test key", "test value")
     assert res
 
 
-@pytest.mark.skipif(
-    sys.version_info < (3, 8), reason="requires python3.8 or higher"
-)
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python3.8 or higher")
 @pytest.mark.asyncio
 async def test_set_redis_key_with_expire():
     redis = mock.MagicMock()
     redis.client.return_value.__aenter__.return_value.set.return_value = True
-    res = await set_redis_key(
-        redis=redis, key="test key", value="test value", expire=1000
-    )
-    redis.client.return_value.__aenter__.return_value.set.assert_called_once_with(
-        "test key", "test value", ex=1000
-    )
+    res = await set_redis_key(redis=redis, key="test key", value="test value", expire=1000)
+    redis.client.return_value.__aenter__.return_value.set.assert_called_once_with("test key", "test value", ex=1000)
     assert res
 
 
-@pytest.mark.skipif(
-    sys.version_info < (3, 8), reason="requires python3.8 or higher"
-)
+@pytest.mark.skipif(sys.version_info < (3, 8), reason="requires python3.8 or higher")
 @pytest.mark.asyncio
 async def test_get_redis_key():
     redis = mock.MagicMock()
     redis.client.return_value.__aenter__.return_value.get.return_value = True
     res = await get_redis_key(redis=redis, key="test key")
-    redis.client.return_value.__aenter__.return_value.get.assert_called_once_with(
-        "test key"
-    )
+    redis.client.return_value.__aenter__.return_value.get.assert_called_once_with("test key")
     assert res
 
 
@@ -128,9 +114,7 @@ async def test_set_redis_key_py_3_7():
 async def test_set_redis_key_with_expire_py_3_7():
     redis = mock.MagicMock()
     redis.client.return_value = AMagicMock()
-    res = await set_redis_key(
-        redis=redis, key="test key", value="test value", expire=1000
-    )
+    res = await set_redis_key(redis=redis, key="test key", value="test value", expire=1000)
     assert res
 
 

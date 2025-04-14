@@ -41,10 +41,7 @@ def test_db_url():
         from config import connection
 
         importlib.reload(connection)
-        assert (
-            connection.DATABASE_URL
-            == "postgresql+asyncpg://user:pass@host:5432/database"
-        )
+        assert connection.DATABASE_URL == "postgresql+asyncpg://user:pass@host:5432/database"
 
 
 def test_redis_url():
