@@ -1,4 +1,4 @@
-exclude: ".git|.tox|.pytest_cache|.ruff_cache"
+exclude: ".git|.tox|.pytest_cache|.ruff_cache|alembic"
 default_stages: [pre-commit]
 fail_fast: true
 
@@ -8,22 +8,25 @@ repos:
       - id: trailing-whitespace-fixer
         name: Run trailing-whitespace-fixer
         entry: trailing-whitespace-fixer
-        language: system
+        language: python
+        additional_dependencies: ["pre-commit-hooks"]
 
       - id: end-of-file-fixer
         name: Run end-of-file-fixer
         entry: end-of-file-fixer
-        language: system
+        language: python
+        additional_dependencies: ["pre-commit-hooks"]
 
       - id: check-merge-conflict
         name: Run check-merge-conflict
         entry: check-merge-conflict
-        language: system
+        language: python
+        additional_dependencies: ["pre-commit-hooks"]
 
       - id: ruff
         name: ruff
         description: "Run 'ruff' for extremely fast Python linting"
-        entry: ruff check --force-exclude
+        entry: uv run ruff check --force-exclude
         language: python
         types_or: [python, pyi, jupyter]
         args: []
@@ -34,7 +37,7 @@ repos:
       - id: ruff-format
         name: ruff-format
         description: "Run 'ruff format' for extremely fast Python formatting"
-        entry: ruff format --force-exclude
+        entry: uv run ruff format --force-exclude
         language: python
         types_or: [python, pyi, jupyter]
         args: []
@@ -44,7 +47,7 @@ repos:
 
       - id: pytest
         name: pytest
-        entry: pytest --cov
+        entry: uv run pytest --cov
         language: python
         types:
           - python
@@ -53,7 +56,7 @@ repos:
 
       - id: coverage
         name: coverage
-        entry: coverage report -m --fail-under=100
+        entry: uv run coverage report -m --fail-under=100
         language: python
         types:
           - python
